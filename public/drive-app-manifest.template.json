@@ -1,0 +1,48 @@
+{
+  "name": "CAD Viewer",
+  "description": "View CAD files (DWG, DXF) directly from Google Drive",
+  "version": "1.0.0",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "file_handlers": [
+    {
+      "action": "open",
+      "name": "Open with CAD Viewer",
+      "icons": {
+        "16": "icons/icon-16.png",
+        "32": "icons/icon-32.png"
+      },
+      "mime_types": [
+        "application/acad",
+        "application/dxf",
+        "image/vnd.dwg",
+        "image/vnd.dxf",
+        "application/autocad_dwg",
+        "application/autocad_dxf"
+      ],
+      "extensions": [
+        "dwg",
+        "dxf"
+      ]
+    }
+  ],
+  "permissions": [
+    "https://www.googleapis.com/auth/drive.readonly"
+  ],
+  "oauth2": {
+    "client_id": "YOUR_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.readonly"
+    ]
+  },
+  "api_console_project_id": "YOUR_PROJECT_ID",
+  "app": {
+    "launch": {
+      "web_url": "https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/"
+    }
+  }
+}
