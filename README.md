@@ -48,7 +48,7 @@ Before running this application, you need to set up Google Drive API credentials
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/mlight-lee/google-drive-cad-viewer.git
+git clone https://github.com/mlightcad/google-drive-cad-viewer.git
 cd google-drive-cad-viewer
 ```
 
@@ -175,6 +175,6 @@ MIT License - see the main project LICENSE file for details.
 
 ## Acknowledgments
 
-- [@mlightcad/cad-viewer](https://github.com/mlight-lee/cad-viewer) - The CAD viewing engine
+- [@mlightcad/cad-viewer](https://github.com/mlightcad/cad-viewer) - The CAD viewing engine
 - [Element Plus](https://element-plus.org/) - Vue 3 UI framework
 - [Google Drive API](https://developers.google.com/drive) - Google Drive integration 
