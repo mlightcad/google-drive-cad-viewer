@@ -130,6 +130,7 @@ src/
 
 The application requests the following Google Drive permissions:
 - `https://www.googleapis.com/auth/drive.readonly` - Read-only access to files in Google Drive
+- `https://www.googleapis.com/auth/userinfo.profile` - Get user info
 
 ## Google Drive App Integration
 
