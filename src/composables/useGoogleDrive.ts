@@ -170,8 +170,8 @@ function createGoogleDrive() {
   const signOut = () => {
     const token = gapi.client.getToken()
     if (token) {
-      google.accounts.oauth2.revoke(token.access_token)
-      gapi.client.setToken('')
+      google.accounts.oauth2.revoke(token.access_token, () => {})
+      gapi.client.setToken(null)
     }
     
     isAuthenticated.value = false
@@ -260,9 +260,17 @@ function createGoogleDrive() {
         fields: 'files(id,name,size,modifiedTime,mimeType),nextPageToken'
       })
 
+      const files = (response.result.files ?? []).map((file) => ({
+        id: file.id!,
+        name: file.name!,
+        size: file.size || '0',
+        modifiedTime: file.modifiedTime!,
+        mimeType: file.mimeType!
+      }))
+
       return {
-        files: response.result.files || [],
-        total: response.result.files?.length || 0
+        files,
+        total: files.length
       }
     } catch (error) {
       console.error('Error searching files:', error)

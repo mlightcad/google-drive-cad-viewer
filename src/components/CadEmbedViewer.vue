@@ -58,8 +58,10 @@ const onMessage = (event: MessageEvent) => {
 }
 
 watch(
-  () => props.buffer,
+  () => [props.buffer, props.fileName] as const,
   () => {
+    // Parent unmounts this component when buffer is cleared; when remounted with
+    // new bytes, sendDrawing runs after embedReady (or immediately if still ready).
     sendDrawing()
   }
 )

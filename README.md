@@ -123,8 +123,6 @@ src/
 │   └── GoogleDriveFilePicker.vue # File browser component
 ├── composables/
 │   └── useGoogleDrive.ts         # Google Drive API integration
-├── types/
-│   └── google-apis.d.ts          # TypeScript declarations for Google APIs
 ├── utils/
 │   └── mlightcadEmbed.ts         # Embed iframe URL and postMessage types
 ├── App.vue                       # Main application component
