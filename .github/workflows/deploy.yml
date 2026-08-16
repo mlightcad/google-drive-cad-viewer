@@ -41,6 +41,29 @@ jobs:
           sed -i "s/YOUR_PROJECT_ID/${{ secrets.GOOGLE_PROJECT_ID }}/g" public/drive-app-manifest.json
           sed -i "s|https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/|https://mlight-lee.github.io/google-drive-cad-viewer/|g" public/drive-app-manifest.json
 
+      - name: Verify deploy secrets
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          VITE_GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          VITE_GOOGLE_APP_ID: ${{ secrets.GOOGLE_APP_ID }}
+          GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
+        run: |
+          missing=0
+          for name in VITE_GOOGLE_CLIENT_ID VITE_GOOGLE_API_KEY VITE_GOOGLE_APP_ID GOOGLE_PROJECT_ID; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name secret is empty. Add it under Settings → Secrets and variables → Actions."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+          # Project number must be digits only (Google Picker setAppId).
+          if ! [[ "$VITE_GOOGLE_APP_ID" =~ ^[0-9]+$ ]]; then
+            echo "::error::GOOGLE_APP_ID must be the numeric Google Cloud project number."
+            exit 1
+          fi
+
       - name: Build with environment variables
         run: pnpm build
         env:

@@ -95,6 +95,30 @@ function updateUserChip(): void {
   }
 }
 
+function updateConfigWarning(): void {
+  if (!isConfigured) {
+    configWarning.innerHTML =
+      'Google API credentials are missing. For local dev, copy <code>env.example</code> to ' +
+      '<code>.env.local</code> and set <code>VITE_GOOGLE_CLIENT_ID</code> and ' +
+      '<code>VITE_GOOGLE_API_KEY</code>. For GitHub Pages, set repository secrets ' +
+      '<code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_API_KEY</code>, then redeploy.'
+    show(configWarning, true)
+    return
+  }
+
+  if (!isPickerConfigured) {
+    configWarning.innerHTML =
+      'Google Picker needs the Cloud <strong>project number</strong>. For local dev set ' +
+      '<code>VITE_GOOGLE_APP_ID</code> in <code>.env.local</code>. For GitHub Pages add secret ' +
+      '<code>GOOGLE_APP_ID</code> (digits only), then redeploy.'
+    show(configWarning, true)
+    return
+  }
+
+  configWarning.textContent = ''
+  show(configWarning, false)
+}
+
 function renderAuthState(): void {
   show(bootPanel, false)
 
@@ -102,7 +126,7 @@ function renderAuthState(): void {
     show(authLayout, true)
     show(authPanel, true)
     show(workspacePanel, false)
-    show(configWarning, !isConfigured || !isPickerConfigured)
+    updateConfigWarning()
     signInBtn.disabled = !isConfigured
     return
   }
