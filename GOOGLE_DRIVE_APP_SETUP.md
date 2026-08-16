@@ -28,6 +28,7 @@ When properly configured, users will be able to:
 1. Go to "APIs & Services" → "Library"
 2. Search for and enable:
    - **Google Drive API**
+   - **Google Picker API** (required for the in-app “Choose from Google Drive” button)
    (Do not enable the legacy Google+ / oauth2 v2 userinfo API — it is blocked.)
 
 ### 1.3 Create OAuth 2.0 Credentials
@@ -71,7 +72,8 @@ Testing mode allows at most **100 testers**. This app requests `drive.readonly`,
    - Add these secrets:
      - `GOOGLE_CLIENT_ID`: Your Google OAuth Client ID
      - `GOOGLE_API_KEY`: Your Google API Key
-     - `GOOGLE_PROJECT_ID`: Your Google Cloud Project ID
+     - `GOOGLE_PROJECT_ID`: Your Google Cloud Project ID (string id for the Drive App manifest)
+     - `GOOGLE_APP_ID`: Your Google Cloud **project number** (digits only; used by Google Picker as `VITE_GOOGLE_APP_ID`)
 
 ### For Local Development
 
@@ -80,8 +82,10 @@ Create a `.env.local` file in your project root:
 ```env
 VITE_GOOGLE_CLIENT_ID=your_client_id_here.apps.googleusercontent.com
 VITE_GOOGLE_API_KEY=your_api_key_here
+VITE_GOOGLE_APP_ID=your_google_project_number_here
 ```
 
+`VITE_GOOGLE_APP_ID` must be the numeric **Project number** from Google Cloud Console → Home → Project info (not the project id string).
 ## Step 3: Drive App Manifest (Auto-Generated)
 
 The drive app manifest is automatically generated during the build process using your GitHub Secrets. No manual configuration needed!
@@ -129,7 +133,7 @@ npm i -g vercel
 vercel
 ```
 
-3. Vercel automatically detects Vue.js and configures everything
+3. Configure the static site build (`pnpm build`, publish `dist/`)
 
 ### Option C: GitHub Pages
 
@@ -140,6 +144,8 @@ vercel
    - Add these secrets:
      - `GOOGLE_CLIENT_ID`: Your Google OAuth Client ID
      - `GOOGLE_API_KEY`: Your Google API Key
+     - `GOOGLE_PROJECT_ID`: Your Google Cloud Project ID (Drive App manifest)
+     - `GOOGLE_APP_ID`: Your Google Cloud **project number** (digits; Google Picker)
 
 2. **Push your code:**
    ```bash
