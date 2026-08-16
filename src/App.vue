@@ -31,8 +31,10 @@
         </div>
         
         <div class="cad-viewer-container">
+          <!-- Only mount when bytes are ready so the prior drawing cannot linger under the overlay. -->
           <CadEmbedViewer
-            v-if="currentFile"
+            v-if="fileBuffer && currentFile"
+            :key="currentFile.id"
             :file-name="currentFile.name"
             :buffer="fileBuffer"
             :title="currentFile.name"
@@ -69,7 +71,10 @@
             </div>
             
             <div v-if="selectedFile" class="cad-viewer">
+              <!-- Unmount on buffer clear so switching files cannot leave the old drawing visible. -->
               <CadEmbedViewer
+                v-if="fileBuffer"
+                :key="selectedFile.id"
                 :file-name="selectedFile.name"
                 :buffer="fileBuffer"
                 :title="selectedFile.name"

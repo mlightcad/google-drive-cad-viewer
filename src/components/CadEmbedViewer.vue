@@ -57,12 +57,8 @@ const onMessage = (event: MessageEvent) => {
   }
 }
 
-watch(
-  () => props.buffer,
-  () => {
-    sendDrawing()
-  }
-)
+// Parent remounts via :key on file change; this covers buffer updates on the same instance.
+watch(() => props.buffer, sendDrawing)
 
 onMounted(() => {
   window.addEventListener('message', onMessage)

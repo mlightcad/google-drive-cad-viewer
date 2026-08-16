@@ -9,7 +9,10 @@
       "DOM.Iterable"
     ],
     "types": [
-      "vite/client"
+      "vite/client",
+      "gapi",
+      "gapi.client.drive-v3",
+      "google.accounts"
     ],
     "declaration": true,
     "declarationMap": true,

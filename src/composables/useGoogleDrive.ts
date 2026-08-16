@@ -33,6 +33,27 @@ interface DriveFile {
   mimeType: string
 }
 
+interface DriveFileFields {
+  id?: string | null
+  name?: string | null
+  size?: string | null
+  modifiedTime?: string | null
+  mimeType?: string | null
+}
+
+function toDriveFile(file: DriveFileFields): DriveFile | null {
+  if (!file.id || !file.name || !file.modifiedTime || !file.mimeType) {
+    return null
+  }
+  return {
+    id: file.id,
+    name: file.name,
+    size: file.size || '0',
+    modifiedTime: file.modifiedTime,
+    mimeType: file.mimeType
+  }
+}
+
 interface SearchResult {
   files: DriveFile[]
   total: number
@@ -170,8 +191,8 @@ function createGoogleDrive() {
   const signOut = () => {
     const token = gapi.client.getToken()
     if (token) {
-      google.accounts.oauth2.revoke(token.access_token)
-      gapi.client.setToken('')
+      google.accounts.oauth2.revoke(token.access_token, () => {})
+      gapi.client.setToken(null)
     }
     
     isAuthenticated.value = false
@@ -207,13 +228,11 @@ function createGoogleDrive() {
         fields: 'id,name,size,modifiedTime,mimeType'
       })
 
-      return {
-        id: response.result.id!,
-        name: response.result.name!,
-        size: response.result.size || '0',
-        modifiedTime: response.result.modifiedTime!,
-        mimeType: response.result.mimeType!
+      const file = toDriveFile(response.result)
+      if (!file) {
+        throw new Error('Incomplete Drive file metadata')
       }
+      return file
     } catch (error) {
       console.error('Error getting file details:', error)
       throw error
@@ -260,9 +279,13 @@ function createGoogleDrive() {
         fields: 'files(id,name,size,modifiedTime,mimeType),nextPageToken'
       })
 
+      const files = (response.result.files ?? [])
+        .map(toDriveFile)
+        .filter((file): file is DriveFile => file !== null)
+
       return {
-        files: response.result.files || [],
-        total: response.result.files?.length || 0
+        files,
+        total: files.length
       }
     } catch (error) {
       console.error('Error searching files:', error)
