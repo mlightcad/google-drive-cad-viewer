@@ -8,9 +8,8 @@
     "url": "git://github.com/mlight-lee/google-drive-cad-viewer"
   },
   "scripts": {
-    "analyze": "vite build --mode analyze",
-    "build": "vue-tsc && vite build",
-    "clean": "rimraf dist lib tsconfig.tsbuildinfo",
+    "build": "tsc && vite build",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
     "dev": "vite",
     "lint": "eslint src/",
     "lint:fix": "eslint --fix --quiet src/",
@@ -21,33 +20,15 @@
     "@types/gapi": "^0.0.47",
     "@types/gapi.client.drive-v3": "^0.0.5",
     "@types/google.accounts": "^0.0.18",
-    "@vitejs/plugin-vue": "^5.1.3",
     "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-vue": "^9.28.0",
     "globals": "^15.9.0",
-    "lint-staged": "^15.2.7",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
-    "rollup-plugin-visualizer": "^5.12.0",
-    "sass": "^1.80.6",
     "typescript": "^5.5.2",
     "typescript-eslint": "^8.4.0",
-    "unocss": "^0.58.6",
-    "unplugin-auto-import": "^0.18.2",
-    "unplugin-vue-components": "^0.26.0",
-    "vite": "^5.4.19",
-    "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-css-injected-by-js": "^3.5.1",
-    "vite-svg-loader": "^5.1.0",
-    "vue-eslint-parser": "^9.4.3",
-    "vue-tsc": "^2.1.6"
-  },
-  "dependencies": {
-    "@element-plus/icons-vue": "^2.3.1",
-    "element-plus": "^2.9.1",
-    "vue": "^3.4.21"
+    "vite": "^5.4.19"
   }
 }

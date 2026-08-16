@@ -37,3 +37,4 @@ jobs:
           # Placeholders are enough for compile/bundle; real secrets stay on deploy.
           VITE_GOOGLE_CLIENT_ID: ci-placeholder.apps.googleusercontent.com
           VITE_GOOGLE_API_KEY: ci-placeholder-api-key
+          VITE_GOOGLE_APP_ID: '123456789012'

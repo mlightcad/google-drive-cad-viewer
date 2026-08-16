@@ -6,7 +6,76 @@
     <title>Google Drive CAD Viewer</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <!-- Sign-in / boot (centered) -->
+      <main id="auth-layout" class="auth-layout" hidden>
+        <header class="app-header">
+          <h1>Google Drive CAD Viewer</h1>
+          <p>View CAD files directly from your Google Drive</p>
+        </header>
+
+        <section id="boot-panel" class="panel center-panel" hidden>
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Loading…</p>
+        </section>
+
+        <section id="auth-panel" class="panel auth-panel" hidden>
+          <h2>Connect Google Drive</h2>
+          <div id="config-warning" class="alert alert-warning" hidden>
+            Copy <code>env.example</code> to <code>.env.local</code>, set
+            <code>VITE_GOOGLE_CLIENT_ID</code> and
+            <code>VITE_GOOGLE_API_KEY</code> (required), plus
+            <code>VITE_GOOGLE_APP_ID</code> (project number, required for
+            Google Picker), then restart <code>pnpm dev</code>.
+          </div>
+          <p class="muted">
+            Sign in to open DWG/DXF drawings from Drive with Google’s file picker.
+          </p>
+          <button id="sign-in-btn" type="button" class="btn btn-primary" disabled>
+            Connect Google Drive
+          </button>
+        </section>
+      </main>
+
+      <!-- Authenticated: toolbar + fullscreen viewer -->
+      <section id="workspace-panel" class="workspace" hidden>
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <span id="file-name" class="file-name" title="">No file selected</span>
+            <span id="file-status" class="file-status muted" hidden></span>
+          </div>
+          <div class="toolbar-actions">
+            <div class="user-chip" id="user-chip" hidden>
+              <img id="user-avatar" alt="" width="28" height="28" />
+              <span id="user-name"></span>
+            </div>
+            <button id="pick-file-btn" type="button" class="btn btn-primary">
+              Choose from Google Drive
+            </button>
+            <button id="sign-out-btn" type="button" class="btn btn-ghost">
+              Sign Out
+            </button>
+          </div>
+        </div>
+
+        <div id="viewer-host" class="viewer-host">
+          <div id="welcome" class="welcome">
+            <p>Opening Google Drive Picker…</p>
+          </div>
+
+          <div id="viewer-overlay" class="viewer-overlay" hidden>
+            <div id="overlay-loading" class="overlay-block">
+              <div class="spinner" aria-hidden="true"></div>
+              <p>Loading file from Google Drive…</p>
+            </div>
+            <div id="overlay-error" class="overlay-block" hidden>
+              <p id="overlay-error-text"></p>
+              <button id="retry-btn" type="button" class="btn btn-primary">Retry</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
