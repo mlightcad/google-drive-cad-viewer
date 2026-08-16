@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0B0F14" />
+    <title>Privacy Policy — Google Drive CAD Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:wght@400;500&family=Syne:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #0b0f14;
+        --paper: #e8eef5;
+        --steel: #8b9bb4;
+        --steel-dim: #5a6a82;
+        --cyan: #3ddcff;
+        --cyan-dim: rgba(61, 220, 255, 0.14);
+        --amber: #e8a54b;
+        --amber-ink: #0b0f14;
+        --line: rgba(232, 238, 245, 0.12);
+        --font-display: 'Syne', 'Segoe UI', sans-serif;
+        --font-body: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+        --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+        --space-3: 1rem;
+        --space-4: 1.5rem;
+        --space-5: 2.5rem;
+        --space-6: 4rem;
+        --max: 1120px;
+        --nav-h: 4rem;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        color: var(--paper);
+        background: var(--ink);
+        font-family: var(--font-body);
+        line-height: 1.6;
+      }
+
+      .shell {
+        width: min(100% - 2.5rem, var(--max));
+        margin-inline: auto;
+      }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        flex-shrink: 0;
+        height: var(--nav-h);
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid var(--line);
+        background: rgba(11, 15, 20, 0.72);
+        backdrop-filter: blur(12px);
+        transition:
+          border-color 0.35s var(--ease),
+          background 0.35s var(--ease),
+          box-shadow 0.35s var(--ease);
+      }
+
+      .nav.is-scrolled {
+        border-bottom-color: rgba(61, 220, 255, 0.22);
+        background: rgba(11, 15, 20, 0.88);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      }
+
+      .nav__inner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-3);
+        width: min(100% - 2.5rem, var(--max));
+        margin-inline: auto;
+      }
+
+      .nav__brand {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.15rem;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+        color: var(--paper);
+      }
+
+      .nav__brand span {
+        color: var(--cyan);
+      }
+
+      .nav__links {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav__links a,
+      .nav__drop-btn {
+        text-decoration: none;
+        color: var(--steel);
+        font-size: 0.95rem;
+      }
+
+      .nav__links a:hover,
+      .nav__drop-btn:hover {
+        color: var(--paper);
+      }
+
+      .nav__dropdown {
+        position: relative;
+      }
+
+      .nav__drop-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0;
+        background: none;
+        border: 0;
+        cursor: pointer;
+        font: inherit;
+      }
+
+      .nav__chev {
+        width: 0.4rem;
+        height: 0.4rem;
+        border-right: 1px solid currentColor;
+        border-bottom: 1px solid currentColor;
+        transform: rotate(45deg) translateY(-2px);
+        opacity: 0.7;
+      }
+
+      .nav__menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.65rem);
+        left: 0;
+        min-width: 11rem;
+        margin: 0;
+        padding: 0.4rem 0;
+        list-style: none;
+        background: rgba(18, 24, 33, 0.96);
+        border: 1px solid var(--line);
+        z-index: 30;
+      }
+
+      .nav__dropdown.is-open .nav__menu {
+        display: block;
+      }
+
+      .nav__menu a {
+        display: block;
+        padding: 0.55rem 0.9rem;
+        white-space: nowrap;
+      }
+
+      .nav__menu a:hover {
+        background: var(--cyan-dim);
+        color: var(--cyan);
+      }
+
+      .nav__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+
+      .nav__toggle {
+        display: none;
+        width: 2.5rem;
+        height: 2.5rem;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .nav__toggle span {
+        display: block;
+        width: 1.1rem;
+        height: 1px;
+        background: var(--paper);
+        box-shadow: 0 -5px 0 var(--paper), 0 5px 0 var(--paper);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .btn--primary {
+        background: var(--amber);
+        color: var(--amber-ink);
+        border-radius: 2px;
+        font-family: var(--font-display);
+        font-weight: 600;
+      }
+
+      .btn--primary:hover {
+        background: #f0b45e;
+        color: var(--amber-ink);
+      }
+
+      .btn--nav {
+        padding: 0.45rem 0.85rem;
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 800px) {
+        .nav__links {
+          display: none;
+        }
+
+        .nav__toggle {
+          display: inline-flex;
+          margin-left: auto;
+        }
+
+        .nav__actions {
+          margin-left: 0.5rem;
+        }
+
+        .nav__links.is-open {
+          display: flex;
+          position: absolute;
+          top: var(--nav-h);
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          padding: var(--space-3) 1.25rem;
+          background: rgba(11, 15, 20, 0.96);
+          border-bottom: 1px solid var(--line);
+          z-index: 25;
+        }
+
+        .nav__links.is-open > li > a,
+        .nav__links.is-open .nav__drop-btn {
+          width: 100%;
+          justify-content: space-between;
+          padding: 0.75rem 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .nav__menu {
+          position: static;
+          border: 0;
+          background: transparent;
+          padding: 0 0 0.5rem 0.75rem;
+        }
+
+        .nav__menu a {
+          padding: 0.55rem 0;
+          border-bottom: 1px solid var(--line);
+        }
+      }
+
+      .page-body {
+        flex: 1;
+        width: min(100% - 2.5rem, 720px);
+        margin: 0 auto;
+        padding: 40px 0 64px;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin: 0 0 24px;
+        color: var(--cyan);
+        text-decoration: none;
+        font-size: 0.95rem;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-family: var(--font-display);
+        font-size: 1.75rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--paper);
+      }
+
+      h2 {
+        margin: 28px 0 8px;
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--paper);
+      }
+
+      p,
+      li {
+        color: var(--steel);
+      }
+
+      strong {
+        color: var(--paper);
+        font-weight: 500;
+      }
+
+      .meta {
+        color: var(--steel-dim);
+        margin: 0 0 24px;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+      }
+
+      a {
+        color: var(--cyan);
+      }
+
+      .nav a {
+        color: inherit;
+      }
+
+      .nav__links a,
+      .nav__drop-btn {
+        color: var(--steel);
+      }
+
+      .nav__links a:hover,
+      .nav__drop-btn:hover {
+        color: var(--paper);
+      }
+
+      .nav__brand {
+        color: var(--paper);
+      }
+
+      .btn--primary {
+        color: var(--amber-ink);
+      }
+
+      ul {
+        padding-left: 1.25rem;
+      }
+
+      code {
+        font-family: var(--font-mono);
+        font-size: 0.86em;
+        color: var(--cyan);
+        word-break: break-all;
+      }
+
+      .footer {
+        flex-shrink: 0;
+        width: 100%;
+        padding: var(--space-6) 0 var(--space-5);
+        border-top: 1px solid var(--line);
+        color: var(--steel);
+        font-size: 0.95rem;
+      }
+
+      .footer__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+      }
+
+      .footer__brand {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.15rem;
+        letter-spacing: -0.03em;
+        color: var(--paper);
+        text-decoration: none;
+      }
+
+      .footer__brand span {
+        color: var(--cyan);
+      }
+
+      .footer__tagline {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 1.2rem;
+        color: var(--paper);
+        letter-spacing: -0.02em;
+      }
+
+      .footer__copy {
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav__inner">
+        <a class="nav__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
+        <button class="nav__toggle" type="button" aria-label="Menu" aria-expanded="false" data-nav-toggle>
+          <span></span>
+        </button>
+        <ul class="nav__links" data-nav-links>
+          <li>
+            <a href="https://cad-viewer.readthedocs.io/en/latest/" target="_blank" rel="noopener">Docs</a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/mlightcad/google-drive-cad-viewer"
+              target="_blank"
+              rel="noopener"
+              >GitHub</a
+            >
+          </li>
+        </ul>
+        <div class="nav__actions">
+          <a
+            class="btn btn--primary btn--nav"
+            href="https://mlightcad.github.io/cad-viewer/"
+            target="_blank"
+            rel="noopener"
+            >Live Demo</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <div class="page-body">
+      <a class="back-link" href="./">← Back to Google Drive CAD Viewer</a>
+      <h1>Privacy Policy</h1>
+      <p class="meta">Last updated: August 16, 2026 · Product: Google Drive CAD Viewer (MLightCAD)</p>
+
+      <p>
+        This Privacy Policy describes how <strong>Google Drive CAD Viewer</strong> (“the App”)
+        accesses, uses, and handles Google user data when you connect your Google account.
+        The App is provided by MLightCAD and is intended for viewing CAD drawings (DWG/DXF)
+        from Google Drive in your browser.
+      </p>
+
+      <h2>Google user data we access</h2>
+      <p>With your consent, the App requests these Google OAuth scopes:</p>
+      <ul>
+        <li>
+          <code>https://www.googleapis.com/auth/drive.file</code> — access only to Drive files
+          that you open with this App (Google Picker or Drive “Open with”), not your entire Drive.
+        </li>
+        <li>
+          <code>https://www.googleapis.com/auth/userinfo.email</code> and
+          <code>https://www.googleapis.com/auth/userinfo.profile</code> — to show your account
+          name, email, and profile picture in the App UI.
+        </li>
+      </ul>
+
+      <h2>How we use Google user data</h2>
+      <ul>
+        <li>
+          Download the CAD file you select so it can be displayed in the in-browser viewer
+          (MLightCAD embed).
+        </li>
+        <li>Show which Google account is signed in.</li>
+      </ul>
+      <p>
+        We use Google user data only to provide these user-facing features. We do not sell Google
+        user data, use it for advertising, or use it to determine creditworthiness.
+      </p>
+
+      <h2>Storage, sharing, and transfer</h2>
+      <ul>
+        <li>
+          File content is downloaded in your browser using your Google access token and passed
+          to the viewer embed via <code>postMessage</code>. The App does not upload your Drive
+          files to our servers for storage.
+        </li>
+        <li>
+          Access tokens are kept in the browser session for Google API calls; signing out revokes
+          the token when possible.
+        </li>
+        <li>
+          We do not transfer Google user data to third parties except as needed to operate the
+          viewer experience in your browser, or when required by law or for security
+          investigations.
+        </li>
+      </ul>
+
+      <h2>Limited Use</h2>
+      <p>
+        The App’s use of information received from Google APIs adheres to the
+        <a href="https://developers.google.com/terms/api-services-user-data-policy"
+          >Google API Services User Data Policy</a
+        >, including the Limited Use requirements.
+      </p>
+
+      <h2>Your choices</h2>
+      <ul>
+        <li>You can disconnect the App at any time using Sign Out in the App.</li>
+        <li>
+          You can also revoke access in your
+          <a href="https://myaccount.google.com/permissions">Google Account permissions</a>.
+        </li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy or the App:
+        <a href="https://mlightcad.com">mlightcad.com</a>.
+      </p>
+    </div>
+
+    <footer class="footer">
+      <div class="shell footer__inner">
+        <a class="footer__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
+        <p class="footer__tagline">Open-source CAD infrastructure for the web.</p>
+        <p class="footer__copy">© 2026 MLightCAD</p>
+      </div>
+    </footer>
+
+    <script>
+      ;(() => {
+        const nav = document.querySelector('.nav')
+        if (!nav) return
+        const toggle = nav.querySelector('[data-nav-toggle]')
+        const links = nav.querySelector('[data-nav-links]')
+        const closeMobile = () => {
+          links?.classList.remove('is-open')
+          toggle?.setAttribute('aria-expanded', 'false')
+        }
+        toggle?.addEventListener('click', () => {
+          const open = links?.classList.toggle('is-open') ?? false
+          toggle.setAttribute('aria-expanded', String(open))
+        })
+        links?.querySelectorAll('a').forEach((a) => {
+          a.addEventListener('click', closeMobile)
+        })
+        const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 8)
+        window.addEventListener('scroll', onScroll, { passive: true })
+        onScroll()
+      })()
+    </script>
+  </body>
+</html>

@@ -61,7 +61,7 @@ The app is still in **Testing** and has not completed Google verification, so **
 4. Enter the email of the Google account you will select at sign-in (must match the account used with **Connect Google Drive**)
 5. Save, wait one or two minutes, then authorize again
 
-Testing mode allows at most **100 testers**. This app requests `drive.readonly`, which is a sensitive/restricted scope. Do **not** click **Publish app** just to let everyone sign in; a public launch requires Google’s verification process.
+Testing mode allows at most **100 testers**. This app requests `drive.file` (sensitive). Do **not** click **Publish app** just to let everyone sign in; a public launch requires Google’s verification process.
 
 ## Step 2: Configure Environment Variables
 

@@ -4,31 +4,83 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Drive CAD Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Syne:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="app">
       <!-- Sign-in / boot (centered) -->
       <main id="auth-layout" class="auth-layout" hidden>
-        <header class="app-header">
-          <h1>Google Drive CAD Viewer</h1>
-          <p>View CAD files directly from your Google Drive</p>
+        <header class="nav">
+          <div class="nav__inner">
+            <a class="nav__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
+            <button class="nav__toggle" type="button" aria-label="Menu" aria-expanded="false" data-nav-toggle>
+              <span></span>
+            </button>
+            <ul class="nav__links" data-nav-links>
+              <li>
+                <a href="https://cad-viewer.readthedocs.io/en/latest/" target="_blank" rel="noopener">Docs</a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/mlightcad/google-drive-cad-viewer"
+                  target="_blank"
+                  rel="noopener"
+                  >GitHub</a
+                >
+              </li>
+            </ul>
+            <div class="nav__actions">
+              <a
+                class="btn btn--primary btn--nav"
+                href="https://mlightcad.github.io/cad-viewer/"
+                target="_blank"
+                rel="noopener"
+                >Live Demo</a
+              >
+            </div>
+          </div>
         </header>
 
-        <section id="boot-panel" class="panel center-panel" hidden>
-          <div class="spinner" aria-hidden="true"></div>
-          <p>Loading…</p>
-        </section>
+        <div class="auth-layout__body">
+          <header class="app-header">
+            <h1>Google Drive CAD Viewer</h1>
+            <p>View DWG/DXF drawings from Google Drive in your browser</p>
+          </header>
 
-        <section id="auth-panel" class="panel auth-panel" hidden>
-          <h2>Connect Google Drive</h2>
-          <div id="config-warning" class="alert alert-warning" hidden></div>
-          <p class="muted">
-            Sign in to open DWG/DXF drawings from Drive with Google’s file picker.
-          </p>
-          <button id="sign-in-btn" type="button" class="btn btn-primary" disabled>
-            Connect Google Drive
-          </button>
-        </section>
+          <section id="boot-panel" class="panel center-panel" hidden>
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Loading…</p>
+          </section>
+
+          <section id="auth-panel" class="panel auth-panel" hidden>
+            <h2>Connect Google Drive</h2>
+            <div id="config-warning" class="alert alert-warning" hidden></div>
+            <p class="muted">
+              Sign in to open DWG/DXF drawings with Google’s file picker or Drive
+              “Open with”. Files are loaded in your browser and shown in the
+              MLightCAD viewer. The app only accesses files you choose to open.
+            </p>
+            <button id="sign-in-btn" type="button" class="btn btn-primary" disabled>
+              Connect Google Drive
+            </button>
+            <p class="auth-footer muted">
+              <a href="./privacy.html">Privacy Policy</a>
+            </p>
+          </section>
+        </div>
+
+        <footer class="footer">
+          <div class="shell footer__inner">
+            <a class="footer__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
+            <p class="footer__tagline">Open-source CAD infrastructure for the web.</p>
+            <p class="footer__copy">© 2026 MLightCAD</p>
+          </div>
+        </footer>
       </main>
 
       <!-- Authenticated: toolbar + fullscreen viewer -->

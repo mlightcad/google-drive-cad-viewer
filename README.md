@@ -101,7 +101,7 @@ src/
 
 ## API Permissions
 
-- `https://www.googleapis.com/auth/drive.readonly` — read Drive files
+- `https://www.googleapis.com/auth/drive.file` — read files the user opens with this app (Picker / Drive “Open with”)
 - `https://www.googleapis.com/auth/userinfo.email` / `userinfo.profile` — show signed-in account
 
 ## How viewing works
@@ -119,8 +119,9 @@ Local embed testing: set `VITE_MLIGHTCAD_EMBED_URL` to your local embed page (fo
 
 - Authentication uses Google OAuth 2.0
 - Credentials live in environment variables
-- Only read-only Drive access is requested
+- Only per-file Drive access (`drive.file`) is requested
 - Drawing bytes are downloaded in-page and sent to the embed iframe via `postMessage`; they are not stored by this app
+- Privacy policy: `privacy.html` (same origin as the app page; link it from the app homepage and OAuth consent screen)
 
 ## Troubleshooting
 

@@ -23,8 +23,10 @@ const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY || ''
 const APP_ID = import.meta.env.VITE_GOOGLE_APP_ID || ''
 
+// drive.file: only files the user opens with this app (Picker / Drive "Open with").
+// Prefer this over drive.readonly (restricted) for public OAuth verification.
 const SCOPES = [
-  'https://www.googleapis.com/auth/drive.readonly',
+  'https://www.googleapis.com/auth/drive.file',
   'https://www.googleapis.com/auth/userinfo.email',
   'https://www.googleapis.com/auth/userinfo.profile'
 ].join(' ')
