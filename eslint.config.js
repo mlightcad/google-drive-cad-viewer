@@ -66,14 +66,6 @@ export default [
         }
       ],
       'quotes': ['error', 'single']
-    },
-    settings: {
-      'vue-i18n': {
-        localeDir: './**/locales/*.{json,json5,ts,js,yaml,yml}',
-        // Specify the version of `vue-i18n` you are using.
-        // If not specified, the message will be parsed twice.
-        messageSyntaxVersion: '^9.0.0'
-      }
     }
   }
 ]

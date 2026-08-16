@@ -31,13 +31,13 @@
         </div>
         
         <div class="cad-viewer-container">
-          <MlCadViewer
-            v-if="fileUrl"
-            locale="en"
-            canvas-id="canvas"
-            :url="fileUrl"
+          <CadEmbedViewer
+            v-if="currentFile"
+            :file-name="currentFile.name"
+            :buffer="fileBuffer"
+            :title="currentFile.name"
           />
-          <div v-else class="viewer-loading">
+          <div v-if="!fileBuffer" class="viewer-loading">
             <el-icon class="loading-icon" size="32"><Loading /></el-icon>
             <p>Loading file content...</p>
           </div>
@@ -58,14 +58,14 @@
           <div class="viewer-main">
             <div v-if="selectedFile" class="file-info">
               <h3>{{ selectedFile.name }}</h3>
-              <p>Loading file from Google Drive...</p>
+              <p>{{ fileBuffer ? 'Opened in MLightCAD viewer' : 'Loading file from Google Drive...' }}</p>
             </div>
             
-            <div v-if="fileUrl" class="cad-viewer">
-              <MlCadViewer
-                locale="en"
-                canvas-id="canvas"
-                :url="fileUrl"
+            <div v-if="selectedFile" class="cad-viewer">
+              <CadEmbedViewer
+                :file-name="selectedFile.name"
+                :buffer="fileBuffer"
+                :title="selectedFile.name"
               />
             </div>
             
@@ -81,16 +81,13 @@
 
 <script setup lang="ts">
 import { Loading } from '@element-plus/icons-vue'
-import { AcApSettingManager } from '@mlightcad/cad-simple-viewer'
-import { MlCadViewer } from '@mlightcad/cad-viewer'
+import { ElMessage } from 'element-plus'
 import { ref, watch } from 'vue'
 
+import CadEmbedViewer from './components/CadEmbedViewer.vue'
 import GoogleDriveAuth from './components/GoogleDriveAuth.vue'
 import GoogleDriveFilePicker from './components/GoogleDriveFilePicker.vue'
 import { useGoogleDrive } from './composables/useGoogleDrive'
-
-// Configure CAD viewer settings
-AcApSettingManager.instance.isShowCommandLine = false
 
 interface DriveFile {
   id: string
@@ -104,43 +101,49 @@ const {
   isAuthenticated, 
   isLoading, 
   currentFile, 
-  getFileDownloadUrl, 
+  getFileContent, 
   signOut 
 } = useGoogleDrive()
 
 const selectedFile = ref<DriveFile | null>(null)
-const fileUrl = ref<string>('')
+const fileBuffer = ref<ArrayBuffer | null>(null)
 
 const handleFileSelected = async (file: DriveFile) => {
   selectedFile.value = file
-  fileUrl.value = ''
+  fileBuffer.value = null
   
   try {
-    // Get the download URL for the file
-    const downloadUrl = await getFileDownloadUrl(file.id)
-    fileUrl.value = downloadUrl
+    fileBuffer.value = await getFileContent(file.id)
   } catch (error) {
-    console.error('Error getting file URL:', error)
-    // Fallback to a demo file if there's an error
-    fileUrl.value = 'https://cdn.jsdelivr.net/gh/mlight-lee/cad-data/data/anteen.dwg'
+    console.error('Error downloading file:', error)
+    ElMessage.error('Could not download this Google Drive file')
   }
 }
 
 // Watch for current file changes (Drive App mode)
 watch(currentFile, async (file) => {
   if (file) {
-    fileUrl.value = ''
+    fileBuffer.value = null
     try {
-      const downloadUrl = await getFileDownloadUrl(file.id)
-      fileUrl.value = downloadUrl
+      fileBuffer.value = await getFileContent(file.id)
     } catch (error) {
-      console.error('Error getting file URL:', error)
-      // Fallback to a demo file if there's an error
-      fileUrl.value = 'https://cdn.jsdelivr.net/gh/mlight-lee/cad-data/data/anteen.dwg'
+      console.error('Error downloading file:', error)
+      ElMessage.error('Could not download this Google Drive file')
     }
   }
 }, { immediate: true })
 </script>
+
+<style>
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
+</style>
 
 <style scoped>
 #app-root {
@@ -232,6 +235,7 @@ watch(currentFile, async (file) => {
 
 .cad-viewer-container {
   min-height: 600px;
+  height: calc(100vh - 260px);
   position: relative;
 }
 
@@ -292,6 +296,7 @@ watch(currentFile, async (file) => {
 .cad-viewer {
   flex: 1;
   position: relative;
+  min-height: 600px;
 }
 
 .welcome-message {

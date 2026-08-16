@@ -40,7 +40,7 @@ declare namespace gapi {
     
     function getToken(): { access_token: string } | null
     
-    function setToken(token: string | null): void
+    function setToken(token: { access_token: string } | string | null): void
     
     namespace drive {
       namespace files {

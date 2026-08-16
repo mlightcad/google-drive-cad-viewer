@@ -10,12 +10,26 @@
       
       <div class="auth-content">
         <div v-if="!isAuthenticated" class="auth-prompt">
+          <el-alert
+            v-if="!isConfigured"
+            title="Google API credentials not configured"
+            type="warning"
+            :closable="false"
+            show-icon
+            class="config-alert"
+          >
+            Copy <code>env.example</code> to <code>.env.local</code>, fill in
+            <code>VITE_GOOGLE_CLIENT_ID</code> and
+            <code>VITE_GOOGLE_API_KEY</code>, then restart
+            <code>pnpm dev</code>.
+          </el-alert>
           <p>Connect to Google Drive to view CAD files directly from your Drive.</p>
           <el-button 
             type="primary" 
             size="large" 
             @click="authenticate"
             :loading="isLoading"
+            :disabled="!isConfigured"
             class="auth-button"
           >
             <el-icon><FolderOpened /></el-icon>
@@ -45,11 +59,12 @@
 
 <script setup lang="ts">
 import { FolderOpened } from '@element-plus/icons-vue'
-import { ElAlert, ElAvatar,ElButton, ElCard, ElIcon } from 'element-plus'
+import { ElAlert, ElAvatar, ElButton, ElCard, ElIcon } from 'element-plus'
 
 import { useGoogleDrive } from '../composables/useGoogleDrive'
 
 const { 
+  isConfigured,
   isAuthenticated, 
   isLoading, 
   userInfo, 
@@ -85,6 +100,11 @@ const {
   margin-bottom: 20px;
   color: #666;
   line-height: 1.5;
+}
+
+.config-alert {
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .auth-button {

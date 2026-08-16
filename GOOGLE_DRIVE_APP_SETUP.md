@@ -28,18 +28,18 @@ When properly configured, users will be able to:
 1. Go to "APIs & Services" → "Library"
 2. Search for and enable:
    - **Google Drive API**
-   - **Google+ API** (for user info)
+   (Do not enable the legacy Google+ / oauth2 v2 userinfo API — it is blocked.)
 
 ### 1.3 Create OAuth 2.0 Credentials
 1. Go to "APIs & Services" → "Credentials"
 2. Click "Create Credentials" → "OAuth 2.0 Client IDs"
 3. Choose "Web application"
-4. Add authorized origins:
-   - `https://your-domain.com` (production)
-   - `http://localhost:5173` (development)
-5. Add authorized redirect URIs:
-   - `https://your-domain.com/`
+4. Add **Authorized JavaScript origins** (scheme + host + port only; **no path, no trailing slash**):
+   - `http://localhost:5173` (local `pnpm dev`)
+   - `https://mlightcad.github.io` (GitHub Pages; origin does **not** include `/google-drive-cad-viewer`)
+5. Add **Authorized redirect URIs** (this app uses the GIS popup token flow, but Google still requires at least one URI):
    - `http://localhost:5173/`
+   - `https://mlightcad.github.io/google-drive-cad-viewer/`
 6. Note your **Client ID** (you'll need this later)
 
 ### 1.4 Create API Key
@@ -49,7 +49,18 @@ When properly configured, users will be able to:
    - Google Drive API
    - Your domain only
 
-   AIzaSyAaNqQZn7LZjjI9oMl977h9bwvcNPOfqig
+### 1.5 Add OAuth test users (required while the app is in Testing)
+
+The app is still in **Testing** and has not completed Google verification, so **only listed testers can sign in**. Project owners are not always enough. Add the Google account you actually use when clicking **Connect Google Drive** (for example `mlight.lee@outlook.com`).
+
+1. Open [Google Auth Platform → Audience](https://console.cloud.google.com/auth/audience)
+   - Older console: **APIs & Services** → **OAuth consent screen** → **Test users**
+2. Keep **Publishing status** as **Testing**
+3. Under **Test users**, click **Add users**
+4. Enter the email of the Google account you will select at sign-in (must match the account used with **Connect Google Drive**)
+5. Save, wait one or two minutes, then authorize again
+
+Testing mode allows at most **100 testers**. This app requests `drive.readonly`, which is a sensitive/restricted scope. Do **not** click **Publish app** just to let everyone sign in; a public launch requires Google’s verification process.
 
 ## Step 2: Configure Environment Variables
 
@@ -215,11 +226,16 @@ Your app should handle these URL parameters:
    - Verify your Client ID and API Key
    - Check that your domain is in authorized origins
 
-3. **Files don't load**
+3. **Error 403 `access_denied` / "has not completed the Google verification process"**
+   - The OAuth app is in **Testing** mode
+   - Add the signed-in Google account as a **Test user** (see §1.5)
+   - Sign in with that tester account, not an unlisted personal/work account
+
+4. **Files don't load**
    - Ensure the Google Drive API is enabled
    - Check that your API key has proper restrictions
 
-4. **CORS errors**
+5. **CORS errors**
    - Make sure your domain is in authorized origins
    - Check that you're using HTTPS in production
 

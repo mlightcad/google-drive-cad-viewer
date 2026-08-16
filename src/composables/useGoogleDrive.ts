@@ -1,9 +1,23 @@
+import { ElMessage } from 'element-plus'
 import { onMounted, reactive, ref } from 'vue'
 
 // Google Drive API configuration
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY || ''
-const SCOPES = 'https://www.googleapis.com/auth/drive.readonly'
+const SCOPES = [
+  'https://www.googleapis.com/auth/drive.readonly',
+  'https://www.googleapis.com/auth/userinfo.email',
+  'https://www.googleapis.com/auth/userinfo.profile'
+].join(' ')
+
+const isPlaceholder = (value: string) =>
+  !value ||
+  value.includes('your_client_id_here') ||
+  value.includes('your_api_key_here') ||
+  value.includes('your_google_client_id_here') ||
+  value.includes('your_google_api_key_here')
+
+const isConfigured = !isPlaceholder(CLIENT_ID) && !isPlaceholder(API_KEY)
 
 interface UserInfo {
   name: string
@@ -32,7 +46,7 @@ interface DriveAppAction {
   mimeType: string
 }
 
-export function useGoogleDrive() {
+function createGoogleDrive() {
   const isAuthenticated = ref(false)
   const isLoading = ref(false)
   const currentFile = ref<DriveFile | null>(null)
@@ -94,28 +108,48 @@ export function useGoogleDrive() {
     }
   }
 
+  const loadUserProfile = async (accessToken: string) => {
+    const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to load user profile (${response.status})`)
+    }
+
+    const profile = await response.json()
+    userInfo.name = profile.name || profile.email || ''
+    userInfo.email = profile.email || ''
+    userInfo.picture = profile.picture || ''
+  }
+
   const handleTokenResponse = (response: any) => {
     if (response.error) {
       console.error('Authentication error:', response.error)
+      ElMessage.error('Google Drive authorization failed')
       return
     }
 
-    // Get user info
-    gapi.client.request({
-      path: 'https://www.googleapis.com/oauth2/v2/userinfo'
-    }).then((userResponse: any) => {
-      userInfo.name = userResponse.result.name
-      userInfo.email = userResponse.result.email
-      userInfo.picture = userResponse.result.picture
-      isAuthenticated.value = true
-    }).catch((error: any) => {
-      console.error('Error getting user info:', error)
+    // GIS token client + gapi: attach the token so Drive API calls are authorized.
+    gapi.client.setToken({ access_token: response.access_token })
+    isAuthenticated.value = true
+
+    loadUserProfile(response.access_token).catch((error: unknown) => {
+      console.warn('Could not load Google user profile:', error)
     })
   }
 
   const authenticate = async () => {
-    if (!CLIENT_ID || !API_KEY) {
-      console.error('Google API credentials not configured')
+    if (!isConfigured) {
+      const missing = [
+        !CLIENT_ID ? 'VITE_GOOGLE_CLIENT_ID' : '',
+        !API_KEY ? 'VITE_GOOGLE_API_KEY' : ''
+      ].filter(Boolean)
+      ElMessage.error(
+        `Google API credentials not configured. Set ${missing.join(' and ')} in .env.local, then restart the dev server.`
+      )
       return
     }
 
@@ -186,43 +220,30 @@ export function useGoogleDrive() {
     }
   }
 
-  const getFileDownloadUrl = async (fileId: string): Promise<string> => {
-    if (!isAuthenticated.value) {
-      throw new Error('Not authenticated')
-    }
-
-    try {
-      const response = await gapi.client.drive.files.get({
-        fileId: fileId,
-        fields: 'webContentLink'
-      })
-
-      return response.result.webContentLink || ''
-    } catch (error) {
-      console.error('Error getting download URL:', error)
-      throw error
-    }
-  }
-
   const getFileContent = async (fileId: string): Promise<ArrayBuffer> => {
     if (!isAuthenticated.value) {
       throw new Error('Not authenticated')
     }
 
-    try {
-      const response = await gapi.client.drive.files.get({
-        fileId: fileId,
-        alt: 'media'
-      })
-
-      // Convert the response to ArrayBuffer
-      const text = response.body as string
-      const encoder = new TextEncoder()
-      return encoder.encode(text).buffer
-    } catch (error) {
-      console.error('Error getting file content:', error)
-      throw error
+    const token = gapi.client.getToken()?.access_token
+    if (!token) {
+      throw new Error('No access token')
     }
+
+    const response = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}?alt=media`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(`Failed to download Drive file (${response.status})`)
+    }
+
+    return response.arrayBuffer()
   }
 
   // Legacy search functionality (for file browser)
@@ -282,6 +303,7 @@ export function useGoogleDrive() {
   })
 
   return {
+    isConfigured,
     isAuthenticated,
     isLoading,
     userInfo,
@@ -290,8 +312,16 @@ export function useGoogleDrive() {
     signOut,
     searchFiles,
     getFileContent,
-    getFileDownloadUrl,
     getFileDetails,
     handleDriveAppAction
   }
+}
+
+let googleDrive: ReturnType<typeof createGoogleDrive> | null = null
+
+export function useGoogleDrive() {
+  if (!googleDrive) {
+    googleDrive = createGoogleDrive()
+  }
+  return googleDrive
 }
