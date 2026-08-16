@@ -31,15 +31,22 @@
         </div>
         
         <div class="cad-viewer-container">
-          <MlCadViewer
-            v-if="fileUrl"
-            locale="en"
-            canvas-id="canvas"
-            :url="fileUrl"
+          <CadEmbedViewer
+            v-if="currentFile"
+            :file-name="currentFile.name"
+            :buffer="fileBuffer"
+            :title="currentFile.name"
           />
-          <div v-else class="viewer-loading">
-            <el-icon class="loading-icon" size="32"><Loading /></el-icon>
-            <p>Loading file content...</p>
+          <div v-if="fileLoadState !== 'ready'" class="viewer-overlay">
+            <template v-if="fileLoadState === 'error'">
+              <el-empty :description="fileLoadError">
+                <el-button type="primary" @click="retryLoadFile">Retry</el-button>
+              </el-empty>
+            </template>
+            <template v-else>
+              <el-icon class="loading-icon" size="32"><Loading /></el-icon>
+              <p>Loading file content...</p>
+            </template>
           </div>
         </div>
       </div>
@@ -58,15 +65,26 @@
           <div class="viewer-main">
             <div v-if="selectedFile" class="file-info">
               <h3>{{ selectedFile.name }}</h3>
-              <p>Loading file from Google Drive...</p>
+              <p>{{ fileStatusText }}</p>
             </div>
             
-            <div v-if="fileUrl" class="cad-viewer">
-              <MlCadViewer
-                locale="en"
-                canvas-id="canvas"
-                :url="fileUrl"
+            <div v-if="selectedFile" class="cad-viewer">
+              <CadEmbedViewer
+                :file-name="selectedFile.name"
+                :buffer="fileBuffer"
+                :title="selectedFile.name"
               />
+              <div v-if="fileLoadState !== 'ready'" class="viewer-overlay">
+                <template v-if="fileLoadState === 'error'">
+                  <el-empty :description="fileLoadError">
+                    <el-button type="primary" @click="retryLoadFile">Retry</el-button>
+                  </el-empty>
+                </template>
+                <template v-else>
+                  <el-icon class="loading-icon" size="32"><Loading /></el-icon>
+                  <p>Loading file from Google Drive...</p>
+                </template>
+              </div>
             </div>
             
             <div v-else-if="isAuthenticated && !selectedFile" class="welcome-message">
@@ -81,16 +99,13 @@
 
 <script setup lang="ts">
 import { Loading } from '@element-plus/icons-vue'
-import { AcApSettingManager } from '@mlightcad/cad-simple-viewer'
-import { MlCadViewer } from '@mlightcad/cad-viewer'
-import { ref, watch } from 'vue'
+import { ElMessage } from 'element-plus'
+import { computed, ref, watch } from 'vue'
 
+import CadEmbedViewer from './components/CadEmbedViewer.vue'
 import GoogleDriveAuth from './components/GoogleDriveAuth.vue'
 import GoogleDriveFilePicker from './components/GoogleDriveFilePicker.vue'
 import { useGoogleDrive } from './composables/useGoogleDrive'
-
-// Configure CAD viewer settings
-AcApSettingManager.instance.isShowCommandLine = false
 
 interface DriveFile {
   id: string
@@ -100,47 +115,73 @@ interface DriveFile {
   mimeType: string
 }
 
+type FileLoadState = 'idle' | 'loading' | 'ready' | 'error'
+
 const { 
   isAuthenticated, 
   isLoading, 
   currentFile, 
-  getFileDownloadUrl, 
+  getFileContent, 
   signOut 
 } = useGoogleDrive()
 
 const selectedFile = ref<DriveFile | null>(null)
-const fileUrl = ref<string>('')
+const fileBuffer = ref<ArrayBuffer | null>(null)
+const fileLoadState = ref<FileLoadState>('idle')
+const fileLoadError = ref('')
+let loadGeneration = 0
 
-const handleFileSelected = async (file: DriveFile) => {
-  selectedFile.value = file
-  fileUrl.value = ''
-  
+const fileStatusText = computed(() => {
+  if (fileLoadState.value === 'ready') return 'Opened in MLightCAD viewer'
+  if (fileLoadState.value === 'error') return fileLoadError.value
+  return 'Loading file from Google Drive...'
+})
+
+const loadFileBuffer = async (fileId: string) => {
+  const generation = ++loadGeneration
+  fileBuffer.value = null
+  fileLoadState.value = 'loading'
+  fileLoadError.value = ''
+
   try {
-    // Get the download URL for the file
-    const downloadUrl = await getFileDownloadUrl(file.id)
-    fileUrl.value = downloadUrl
+    const buffer = await getFileContent(fileId)
+    if (generation !== loadGeneration) return
+    fileBuffer.value = buffer
+    fileLoadState.value = 'ready'
   } catch (error) {
-    console.error('Error getting file URL:', error)
-    // Fallback to a demo file if there's an error
-    fileUrl.value = 'https://cdn.jsdelivr.net/gh/mlight-lee/cad-data/data/anteen.dwg'
+    if (generation !== loadGeneration) return
+    console.error('Error downloading file:', error)
+    fileLoadState.value = 'error'
+    fileLoadError.value = 'Could not download this Google Drive file'
+    ElMessage.error(fileLoadError.value)
   }
 }
 
-// Watch for current file changes (Drive App mode)
+const retryLoadFile = async () => {
+  const file = currentFile.value || selectedFile.value
+  if (file) await loadFileBuffer(file.id)
+}
+
+const handleFileSelected = async (file: DriveFile) => {
+  selectedFile.value = file
+  await loadFileBuffer(file.id)
+}
+
 watch(currentFile, async (file) => {
-  if (file) {
-    fileUrl.value = ''
-    try {
-      const downloadUrl = await getFileDownloadUrl(file.id)
-      fileUrl.value = downloadUrl
-    } catch (error) {
-      console.error('Error getting file URL:', error)
-      // Fallback to a demo file if there's an error
-      fileUrl.value = 'https://cdn.jsdelivr.net/gh/mlight-lee/cad-data/data/anteen.dwg'
-    }
-  }
+  if (file) await loadFileBuffer(file.id)
 }, { immediate: true })
 </script>
+
+<style>
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
+</style>
 
 <style scoped>
 #app-root {
@@ -232,15 +273,19 @@ watch(currentFile, async (file) => {
 
 .cad-viewer-container {
   min-height: 600px;
+  height: calc(100vh - 260px);
   position: relative;
 }
 
-.viewer-loading {
+.viewer-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
+  background: rgba(255, 255, 255, 0.92);
   color: #666;
 }
 
@@ -292,6 +337,7 @@ watch(currentFile, async (file) => {
 .cad-viewer {
   flex: 1;
   position: relative;
+  min-height: 600px;
 }
 
 .welcome-message {

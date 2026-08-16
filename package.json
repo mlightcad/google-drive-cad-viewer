@@ -17,6 +17,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.1",
     "@vitejs/plugin-vue": "^5.1.3",
     "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
@@ -27,7 +28,6 @@
     "lint-staged": "^15.2.7",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "^1.80.6",
     "unocss": "^0.58.6",
@@ -38,22 +38,13 @@
     "vite": "^5.4.19",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-css-injected-by-js": "^3.5.1",
-    "vite-plugin-static-copy": "^3.1.1",
     "vite-svg-loader": "^5.1.0",
     "vue-eslint-parser": "^9.4.3",
     "vue-tsc": "^2.1.6"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "@mlightcad/cad-simple-viewer": "1.0.5",
-    "@mlightcad/cad-viewer": "1.0.5",
-    "@mlightcad/data-model": "1.1.6",
-    "@mlightcad/libredwg-converter": "2.0.6",
-    "@mlightcad/libredwg-web": "0.1.5",
-    "@vueuse/core": "^11.1.0",
     "element-plus": "^2.9.1",
-    "vue": "^3.4.21",
-    "vue-i18n": "^10.0.1",
-    "googleapis": "^133.0.0"
+    "vue": "^3.4.21"
   }
 }

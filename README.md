@@ -7,7 +7,7 @@ A modern web application that integrates Google Drive with a powerful CAD viewer
 - 🔐 **Google Drive App Integration**: Register as a file handler for CAD files in Google Drive
 - 🎯 **Direct File Opening**: Right-click CAD files in Drive → "Open with CAD Viewer"
 - 📁 **File Browser**: Browse and search CAD files in your Google Drive
-- 🎯 **CAD Viewer**: View CAD files with advanced rendering capabilities
+- 🎯 **CAD Viewer**: Open drawings in [MLightCAD's embed viewer](https://mlightcad.com/iframe-plugin.html) via iframe
 - 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
 - 🔍 **File Search**: Search for specific CAD files by name
 - 📊 **File Information**: View file size, modification date, and other metadata
@@ -21,7 +21,7 @@ A modern web application that integrates Google Drive with a powerful CAD viewer
 
 - **Frontend**: Vue 3 with TypeScript
 - **UI Framework**: Element Plus
-- **CAD Viewer**: @mlightcad/cad-viewer
+- **CAD Viewer**: [MLightCAD iframe plugin](https://mlightcad.com/iframe-plugin.html) (`https://mlightcad.com/embed.html`)
 - **Google Drive API**: Google APIs JavaScript Client Library
 - **Build Tool**: Vite
 - **Styling**: UnoCSS + SCSS
@@ -68,6 +68,8 @@ cp env.example .env.local
 ```env
 VITE_GOOGLE_CLIENT_ID=your_google_client_id_here
 VITE_GOOGLE_API_KEY=your_google_api_key_here
+# Optional. Defaults to https://mlightcad.com/embed.html
+# VITE_MLIGHTCAD_EMBED_URL=https://mlightcad.com/embed.html
 ```
 
 ## Development
@@ -102,8 +104,8 @@ pnpm preview
 ### Standard Mode (File Browser)
 1. **Authentication**: Click "Connect Google Drive" to authenticate with your Google account
 2. **Browse Files**: Use the file browser to search and browse CAD files in your Google Drive
-3. **View Files**: Click on any CAD file to view it in the integrated viewer
-4. **Navigation**: Use the CAD viewer's built-in navigation tools to zoom, pan, and explore the drawing
+3. **View Files**: Click on any CAD file. The app downloads the drawing with your Drive token and opens it in the MLightCAD embed iframe via `postMessage`
+4. **Navigation**: Use the embed viewer's review tools to pan, zoom, measure, and annotate
 
 ### Google Drive App Mode
 1. **Install App**: Install the CAD Viewer as a Google Drive App
@@ -116,20 +118,24 @@ pnpm preview
 ```
 src/
 ├── components/
-│   ├── GoogleDriveAuth.vue      # Google Drive authentication component
+│   ├── CadEmbedViewer.vue        # iframe wrapper for MLightCAD embed.html
+│   ├── GoogleDriveAuth.vue       # Google Drive authentication component
 │   └── GoogleDriveFilePicker.vue # File browser component
 ├── composables/
-│   └── useGoogleDrive.ts        # Google Drive API integration
+│   └── useGoogleDrive.ts         # Google Drive API integration
 ├── types/
-│   └── google-apis.d.ts         # TypeScript declarations for Google APIs
-├── App.vue                      # Main application component
-└── main.ts                      # Application entry point
+│   └── google-apis.d.ts          # TypeScript declarations for Google APIs
+├── utils/
+│   └── mlightcadEmbed.ts         # Embed iframe URL and postMessage types
+├── App.vue                       # Main application component
+└── main.ts                       # Application entry point
 ```
 
 ## API Permissions
 
 The application requests the following Google Drive permissions:
 - `https://www.googleapis.com/auth/drive.readonly` - Read-only access to files in Google Drive
+- `https://www.googleapis.com/auth/userinfo.email` / `userinfo.profile` - Display the signed-in account name and avatar
 
 ## Google Drive App Integration
 
@@ -141,12 +147,23 @@ This application can be registered as a Google Drive App to handle CAD files dir
 
 See [GOOGLE_DRIVE_APP_SETUP.md](./GOOGLE_DRIVE_APP_SETUP.md) for complete setup instructions.
 
+## How viewing works
+
+This app does **not** bundle `@mlightcad/cad-viewer` or other MLightCAD packages. After you pick a Drive file it:
+
+1. Downloads the DWG/DXF in this page with the Google Drive OAuth token
+2. Opens [MLightCAD embed](https://mlightcad.com/embed.html) in an iframe (`mode=review&toolbar=1`)
+3. Sends the file bytes with `postMessage` (`mlightcad-embed:open`) after the embed reports `mlightcad-embed:ready`
+4. The drawing is parsed and rendered **in the visitor’s browser** — it is not uploaded to a CAD conversion backend
+
+Local embed testing: set `VITE_MLIGHTCAD_EMBED_URL` to your local `mlightcad.github.io` embed page (for example `http://localhost:5174/embed.html`) so Drive viewing uses the postMessage API before that site is deployed.
+
 ## Security
 
 - All authentication is handled securely through Google's OAuth 2.0 flow
 - API credentials are stored as environment variables
 - The application only requests read-only access to Google Drive
-- No file data is stored locally or transmitted to third-party servers
+- Drawing bytes are downloaded in this page with the Drive OAuth token and sent to the embed iframe via `postMessage`; they are not stored by this app
 
 ## Contributing
 
@@ -163,6 +180,7 @@ See [GOOGLE_DRIVE_APP_SETUP.md](./GOOGLE_DRIVE_APP_SETUP.md) for complete setup 
 1. **Authentication fails**: Ensure your Google API credentials are correctly configured and the domain is authorized
 2. **Files not loading**: Check that the Google Drive API is enabled in your Google Cloud Console
 3. **CORS errors**: Make sure your domain is added to the authorized origins in your OAuth 2.0 client configuration
+4. **Drawing does not open in the iframe**: Confirm the file is `.dwg`/`.dxf` and that you are still signed in (the Drive download uses a short-lived access token)
 
 ### Development Issues
 
@@ -175,6 +193,6 @@ MIT License - see the main project LICENSE file for details.
 
 ## Acknowledgments
 
-- [@mlightcad/cad-viewer](https://github.com/mlightcad/cad-viewer) - The CAD viewing engine
+- [MLightCAD iframe plugin](https://mlightcad.com/iframe-plugin.html) - Embed DWG/DXF from a URL
 - [Element Plus](https://element-plus.org/) - Vue 3 UI framework
 - [Google Drive API](https://developers.google.com/drive) - Google Drive integration 
