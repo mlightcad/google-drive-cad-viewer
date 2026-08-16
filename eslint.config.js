@@ -49,7 +49,7 @@ export default [
   ...tsLint.configs.recommended,
   ...vueLint.configs["flat/essential"],
   {
-    ignores: ['node_modules', 'dist', 'public', '.nuxt']
+    ignores: ['node_modules', 'dist', 'public', '.nuxt', '**/*.d.ts']
   },
   eslintConfigPrettier,
   {

@@ -56,7 +56,7 @@ function createGoogleDrive() {
     picture: ''
   })
 
-  let tokenClient: any = null
+  let tokenClient: google.accounts.oauth2.TokenClient | null = null
   let gapiInited = false
   let gisInited = false
 
@@ -125,8 +125,8 @@ function createGoogleDrive() {
     userInfo.picture = profile.picture || ''
   }
 
-  const handleTokenResponse = (response: any) => {
-    if (response.error) {
+  const handleTokenResponse = (response: google.accounts.oauth2.TokenResponse) => {
+    if (response.error || !response.access_token) {
       console.error('Authentication error:', response.error)
       ElMessage.error('Google Drive authorization failed')
       return

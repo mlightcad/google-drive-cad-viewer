@@ -37,9 +37,16 @@
             :buffer="fileBuffer"
             :title="currentFile.name"
           />
-          <div v-if="!fileBuffer" class="viewer-loading">
-            <el-icon class="loading-icon" size="32"><Loading /></el-icon>
-            <p>Loading file content...</p>
+          <div v-if="fileLoadState !== 'ready'" class="viewer-overlay">
+            <template v-if="fileLoadState === 'error'">
+              <el-empty :description="fileLoadError">
+                <el-button type="primary" @click="retryLoadFile">Retry</el-button>
+              </el-empty>
+            </template>
+            <template v-else>
+              <el-icon class="loading-icon" size="32"><Loading /></el-icon>
+              <p>Loading file content...</p>
+            </template>
           </div>
         </div>
       </div>
@@ -58,7 +65,7 @@
           <div class="viewer-main">
             <div v-if="selectedFile" class="file-info">
               <h3>{{ selectedFile.name }}</h3>
-              <p>{{ fileBuffer ? 'Opened in MLightCAD viewer' : 'Loading file from Google Drive...' }}</p>
+              <p>{{ fileStatusText }}</p>
             </div>
             
             <div v-if="selectedFile" class="cad-viewer">
@@ -67,6 +74,17 @@
                 :buffer="fileBuffer"
                 :title="selectedFile.name"
               />
+              <div v-if="fileLoadState !== 'ready'" class="viewer-overlay">
+                <template v-if="fileLoadState === 'error'">
+                  <el-empty :description="fileLoadError">
+                    <el-button type="primary" @click="retryLoadFile">Retry</el-button>
+                  </el-empty>
+                </template>
+                <template v-else>
+                  <el-icon class="loading-icon" size="32"><Loading /></el-icon>
+                  <p>Loading file from Google Drive...</p>
+                </template>
+              </div>
             </div>
             
             <div v-else-if="isAuthenticated && !selectedFile" class="welcome-message">
@@ -82,7 +100,7 @@
 <script setup lang="ts">
 import { Loading } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import CadEmbedViewer from './components/CadEmbedViewer.vue'
 import GoogleDriveAuth from './components/GoogleDriveAuth.vue'
@@ -97,6 +115,8 @@ interface DriveFile {
   mimeType: string
 }
 
+type FileLoadState = 'idle' | 'loading' | 'ready' | 'error'
+
 const { 
   isAuthenticated, 
   isLoading, 
@@ -107,30 +127,48 @@ const {
 
 const selectedFile = ref<DriveFile | null>(null)
 const fileBuffer = ref<ArrayBuffer | null>(null)
+const fileLoadState = ref<FileLoadState>('idle')
+const fileLoadError = ref('')
+let loadGeneration = 0
 
-const handleFileSelected = async (file: DriveFile) => {
-  selectedFile.value = file
+const fileStatusText = computed(() => {
+  if (fileLoadState.value === 'ready') return 'Opened in MLightCAD viewer'
+  if (fileLoadState.value === 'error') return fileLoadError.value
+  return 'Loading file from Google Drive...'
+})
+
+const loadFileBuffer = async (fileId: string) => {
+  const generation = ++loadGeneration
   fileBuffer.value = null
-  
+  fileLoadState.value = 'loading'
+  fileLoadError.value = ''
+
   try {
-    fileBuffer.value = await getFileContent(file.id)
+    const buffer = await getFileContent(fileId)
+    if (generation !== loadGeneration) return
+    fileBuffer.value = buffer
+    fileLoadState.value = 'ready'
   } catch (error) {
+    if (generation !== loadGeneration) return
     console.error('Error downloading file:', error)
-    ElMessage.error('Could not download this Google Drive file')
+    fileLoadState.value = 'error'
+    fileLoadError.value = 'Could not download this Google Drive file'
+    ElMessage.error(fileLoadError.value)
   }
 }
 
-// Watch for current file changes (Drive App mode)
+const retryLoadFile = async () => {
+  const file = currentFile.value || selectedFile.value
+  if (file) await loadFileBuffer(file.id)
+}
+
+const handleFileSelected = async (file: DriveFile) => {
+  selectedFile.value = file
+  await loadFileBuffer(file.id)
+}
+
 watch(currentFile, async (file) => {
-  if (file) {
-    fileBuffer.value = null
-    try {
-      fileBuffer.value = await getFileContent(file.id)
-    } catch (error) {
-      console.error('Error downloading file:', error)
-      ElMessage.error('Could not download this Google Drive file')
-    }
-  }
+  if (file) await loadFileBuffer(file.id)
 }, { immediate: true })
 </script>
 
@@ -239,12 +277,15 @@ body,
   position: relative;
 }
 
-.viewer-loading {
+.viewer-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
+  background: rgba(255, 255, 255, 0.92);
   color: #666;
 }
 

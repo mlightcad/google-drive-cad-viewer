@@ -16,10 +16,19 @@ declare namespace google {
         requestAccessToken(): void
       }
       
+      interface TokenResponse {
+        access_token?: string
+        error?: string
+        error_description?: string
+        expires_in?: number
+        scope?: string
+        token_type?: string
+      }
+
       function initTokenClient(config: {
         client_id: string
         scope: string
-        callback: (response: any) => void
+        callback: (response: TokenResponse) => void
       }): TokenClient
       
       function revoke(token: string): void
