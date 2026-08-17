@@ -77,7 +77,7 @@ pnpm preview
 
 ### Standard mode (Google Picker)
 
-1. Click **Connect Google Drive** and authorize
+1. Click **Sign in with Google** and authorize
 2. Click **Choose from Google Drive** to open Google’s file picker
 3. Select a `.dwg` or `.dxf` file
 4. The app downloads the file with your Drive token and opens it in the MLightCAD embed iframe
@@ -121,7 +121,22 @@ Local embed testing: set `VITE_MLIGHTCAD_EMBED_URL` to your local embed page (fo
 - Credentials live in environment variables
 - Only per-file Drive access (`drive.file`) is requested
 - Drawing bytes are downloaded in-page and sent to the embed iframe via `postMessage`; they are not stored by this app
-- Privacy policy: `privacy.html` (same origin as the app page; link it from the app homepage and OAuth consent screen)
+- In-app Privacy links (auth page, nav, workspace toolbar) open `privacy.html`
+
+### Publishing / OAuth verification (mlightcad.com)
+
+Host the built app and `privacy.html` on the **same verified domain** you list as the OAuth consent Homepage (recommended: `mlightcad.com`).
+
+Example when the app lives under the marketing site:
+
+| Field | Example URL |
+|-------|-------------|
+| App | `https://mlightcad.com/google-drive-cad-viewer/` |
+| Privacy Policy | `https://mlightcad.com/google-drive-cad-viewer/privacy.html` |
+| OAuth Homepage | Product page on `mlightcad.com` (describe the app; not only a login wall) |
+| Authorized domain | `mlightcad.com` (verify ownership in Google Search Console) |
+
+Use the same Privacy Policy URL on the homepage and in the OAuth consent screen. Add Authorized JavaScript origins for that production origin before submitting verification.
 
 ## Troubleshooting
 

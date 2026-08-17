@@ -414,6 +414,23 @@
         letter-spacing: -0.02em;
       }
 
+      .footer__links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.25rem;
+        margin: 0;
+        font-size: 0.85rem;
+      }
+
+      .footer__links a {
+        color: var(--steel);
+        text-decoration: none;
+      }
+
+      .footer__links a:hover {
+        color: var(--cyan);
+      }
+
       .footer__copy {
         margin: 0;
         font-family: var(--font-mono);
@@ -429,6 +446,9 @@
           <span></span>
         </button>
         <ul class="nav__links" data-nav-links>
+          <li>
+            <a href="./">App</a>
+          </li>
           <li>
             <a href="https://cad-viewer.readthedocs.io/en/latest/" target="_blank" rel="noopener">Docs</a>
           </li>
@@ -530,7 +550,13 @@
       <h2>Contact</h2>
       <p>
         Questions about this policy or the App:
-        <a href="https://mlightcad.com">mlightcad.com</a>.
+        <a href="mailto:mlight.lee@outlook.com">mlight.lee@outlook.com</a>
+        ·
+        <a href="https://mlightcad.com/">mlightcad.com</a>
+        ·
+        <a href="https://github.com/mlightcad/google-drive-cad-viewer/issues"
+          >GitHub issues</a
+        >.
       </p>
     </div>
 
@@ -538,6 +564,10 @@
       <div class="shell footer__inner">
         <a class="footer__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
         <p class="footer__tagline">Open-source CAD infrastructure for the web.</p>
+        <p class="footer__links">
+          <a href="./">Google Drive CAD Viewer</a>
+          <a href="https://mlightcad.com/">mlightcad.com</a>
+        </p>
         <p class="footer__copy">© 2026 MLightCAD</p>
       </div>
     </footer>

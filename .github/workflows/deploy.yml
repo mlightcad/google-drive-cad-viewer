@@ -39,7 +39,8 @@ jobs:
           cp public/drive-app-manifest.template.json public/drive-app-manifest.json
           sed -i "s/YOUR_CLIENT_ID.apps.googleusercontent.com/${{ secrets.GOOGLE_CLIENT_ID }}/g" public/drive-app-manifest.json
           sed -i "s/YOUR_PROJECT_ID/${{ secrets.GOOGLE_PROJECT_ID }}/g" public/drive-app-manifest.json
-          sed -i "s|https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/|https://mlight-lee.github.io/google-drive-cad-viewer/|g" public/drive-app-manifest.json
+          # Pages deploy URL (override template’s mlightcad.com path until the app is hosted there).
+          sed -i "s|https://mlightcad.com/google-drive-cad-viewer/|https://mlight-lee.github.io/google-drive-cad-viewer/|g" public/drive-app-manifest.json
 
       - name: Verify deploy secrets
         env:

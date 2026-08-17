@@ -42,7 +42,7 @@
   "api_console_project_id": "YOUR_PROJECT_ID",
   "app": {
     "launch": {
-      "web_url": "https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/"
+      "web_url": "https://mlightcad.com/google-drive-cad-viewer/"
     }
   }
 }

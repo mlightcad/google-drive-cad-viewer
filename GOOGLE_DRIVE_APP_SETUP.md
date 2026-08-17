@@ -52,16 +52,16 @@ When properly configured, users will be able to:
 
 ### 1.5 Add OAuth test users (required while the app is in Testing)
 
-The app is still in **Testing** and has not completed Google verification, so **only listed testers can sign in**. Project owners are not always enough. Add the Google account you actually use when clicking **Connect Google Drive** (for example `mlight.lee@outlook.com`).
+The app is still in **Testing** and has not completed Google verification, so **only listed testers can sign in**. Project owners are not always enough. Add the Google account you actually use when clicking **Sign in with Google** (for example `mlight.lee@outlook.com`).
 
 1. Open [Google Auth Platform → Audience](https://console.cloud.google.com/auth/audience)
    - Older console: **APIs & Services** → **OAuth consent screen** → **Test users**
 2. Keep **Publishing status** as **Testing**
 3. Under **Test users**, click **Add users**
-4. Enter the email of the Google account you will select at sign-in (must match the account used with **Connect Google Drive**)
+4. Enter the email of the Google account you will select at sign-in (must match the account used with **Sign in with Google**)
 5. Save, wait one or two minutes, then authorize again
 
-Testing mode allows at most **100 testers**. This app requests `drive.file` (sensitive). Do **not** click **Publish app** just to let everyone sign in; a public launch requires Google’s verification process.
+Testing mode allows at most **100 testers**. This app requests `drive.file` (non-sensitive / per-file). Do **not** click **Publish app** just to let everyone sign in; a public launch still requires Google’s brand verification and a configured Homepage + Privacy Policy on your verified domain (see README “Publishing / OAuth verification”).
 
 ## Step 2: Configure Environment Variables
 
@@ -266,14 +266,18 @@ console.log('Google loaded:', typeof google !== 'undefined');
 
 ## Production Checklist
 
-- [ ] HTTPS enabled
-- [ ] Environment variables configured
-- [ ] Drive App manifest updated with real credentials
+- [ ] HTTPS enabled on the production host (`mlightcad.com` recommended)
+- [ ] App and `privacy.html` served from the **same** verified domain
+- [ ] OAuth consent screen: Homepage URL, Privacy Policy URL (identical to the in-app link), Authorized domains
+- [ ] Domain ownership verified in Google Search Console
+- [ ] Environment variables / GitHub secrets configured
+- [ ] Drive App manifest updated with real credentials and production `web_url`
 - [ ] Icons created and uploaded
-- [ ] OAuth credentials configured for production domain
+- [ ] OAuth credentials configured for production origin
 - [ ] API key restricted to production domain
-- [ ] Google Drive API enabled
+- [ ] Google Drive API + Google Picker API enabled
 - [ ] App tested with real CAD files
+- [ ] Demo video recorded (OAuth consent in English + open DWG/DXF) before submitting verification
 
 ## Support
 
