@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Google Drive CAD Viewer</title>
+    <title>Google Drive CAD Viewer — MLightCAD</title>
+    <meta
+      name="description"
+      content="Open DWG and DXF drawings from Google Drive in your browser with MLightCAD. Per-file access only; drawings stay on your device."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,6 +26,9 @@
               <span></span>
             </button>
             <ul class="nav__links" data-nav-links>
+              <li>
+                <a href="./privacy.html" target="_blank" rel="noopener">Privacy</a>
+              </li>
               <li>
                 <a href="https://cad-viewer.readthedocs.io/en/latest/" target="_blank" rel="noopener">Docs</a>
               </li>
@@ -48,8 +55,12 @@
 
         <div class="auth-layout__body">
           <header class="app-header">
+            <p class="app-header__eyebrow">MLightCAD · Google Drive</p>
             <h1>Google Drive CAD Viewer</h1>
-            <p>View DWG/DXF drawings from Google Drive in your browser</p>
+            <p>
+              Open DWG/DXF from Google Drive in your browser. Only files you
+              choose; nothing is uploaded to our servers.
+            </p>
           </header>
 
           <section id="boot-panel" class="panel center-panel" hidden>
@@ -58,18 +69,34 @@
           </section>
 
           <section id="auth-panel" class="panel auth-panel" hidden>
-            <h2>Connect Google Drive</h2>
+            <h2>Sign in to continue</h2>
             <div id="config-warning" class="alert alert-warning" hidden></div>
-            <p class="muted">
-              Sign in to open DWG/DXF drawings with Google’s file picker or Drive
-              “Open with”. Files are loaded in your browser and shown in the
-              MLightCAD viewer. The app only accesses files you choose to open.
-            </p>
-            <button id="sign-in-btn" type="button" class="btn btn-primary" disabled>
-              Connect Google Drive
+            <button id="sign-in-btn" type="button" class="btn-google" disabled>
+              <span class="btn-google__icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                  />
+                  <path fill="none" d="M0 0h48v48H0z" />
+                </svg>
+              </span>
+              <span class="btn-google__label">Sign in with Google</span>
             </button>
             <p class="auth-footer muted">
-              <a href="./privacy.html">Privacy Policy</a>
+              <a href="./privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
             </p>
           </section>
         </div>
@@ -78,6 +105,10 @@
           <div class="shell footer__inner">
             <a class="footer__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
             <p class="footer__tagline">Open-source CAD infrastructure for the web.</p>
+            <p class="footer__links">
+              <a href="./privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+              <a href="https://mlightcad.com/" target="_blank" rel="noopener">mlightcad.com</a>
+            </p>
             <p class="footer__copy">© 2026 MLightCAD</p>
           </div>
         </footer>
@@ -95,6 +126,13 @@
               <img id="user-avatar" alt="" width="28" height="28" />
               <span id="user-name"></span>
             </div>
+            <a
+              class="toolbar-privacy"
+              href="./privacy.html"
+              target="_blank"
+              rel="noopener"
+              >Privacy</a
+            >
             <button id="pick-file-btn" type="button" class="btn btn-primary">
               Choose from Google Drive
             </button>

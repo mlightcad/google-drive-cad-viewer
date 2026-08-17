@@ -56,33 +56,56 @@ body {
 }
 
 /* —— Auth / boot layout —— */
+/* Must use height (not only min-height): #app is overflow:hidden for the
+   viewer; auth scrolls inside this box so the footer is never clipped. */
 .auth-layout {
-  min-height: 100%;
+  height: 100%;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: var(--ink);
+  -webkit-overflow-scrolling: touch;
 }
 
 .auth-layout__body {
-  flex: 1;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
+  justify-content: flex-start;
+  padding: 24px 20px 32px;
   width: 100%;
   box-sizing: border-box;
 }
 
+@supports (justify-content: safe center) {
+  .auth-layout__body {
+    /* When short: center. When tall: start from top so scroll reaches footer. */
+    justify-content: safe center;
+  }
+}
+
 .app-header {
   text-align: center;
-  padding: 0 20px 24px;
+  padding: 0 20px 20px;
   color: #fff;
+  max-width: 32rem;
+}
+
+.app-header__eyebrow {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cyan);
 }
 
 .app-header h1 {
   margin: 0 0 8px;
+  font-family: var(--font-display);
   font-size: 2.25rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -92,6 +115,7 @@ body {
   margin: 0;
   opacity: 0.9;
   font-size: 1.05rem;
+  line-height: 1.5;
 }
 
 .panel {
@@ -106,22 +130,65 @@ body {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding: 40px 32px;
+  padding: 28px 28px;
   text-align: center;
 }
 
 .auth-panel h2 {
-  margin: 0 0 12px;
+  margin: 0 0 20px;
   font-size: 1.35rem;
 }
 
 .auth-footer {
-  margin: 20px 0 0;
+  margin: 16px 0 0;
   font-size: 0.9rem;
+  line-height: 1.45;
 }
 
 .auth-footer a {
   color: var(--primary);
+}
+
+/* Google Sign-In branding (light button; see Google Identity branding guidelines) */
+.btn-google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  background: #fff;
+  color: #3c4043;
+  font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.15);
+}
+
+.btn-google:hover:not(:disabled) {
+  background: #f8f9fa;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.25);
+}
+
+.btn-google:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-google__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.btn-google__label {
+  line-height: 1;
 }
 
 /* Match mlightcad.com site chrome */
@@ -348,7 +415,8 @@ body {
 .footer {
   flex-shrink: 0;
   width: 100%;
-  padding: var(--space-6) 0 var(--space-5);
+  margin-top: auto;
+  padding: var(--space-5) 0 var(--space-4);
   border-top: 1px solid var(--line);
   color: var(--steel);
   font-size: 0.95rem;
@@ -381,6 +449,23 @@ body {
   font-size: 1.2rem;
   color: var(--paper);
   letter-spacing: -0.02em;
+}
+
+.footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.footer__links a {
+  color: var(--steel);
+  text-decoration: none;
+}
+
+.footer__links a:hover {
+  color: var(--cyan);
 }
 
 .footer__copy {
@@ -503,6 +588,20 @@ body {
   flex-shrink: 0;
 }
 
+.toolbar-privacy {
+  padding: 6px 8px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.toolbar-privacy:hover {
+  color: var(--primary);
+  background: rgba(26, 115, 232, 0.08);
+}
+
 .user-chip {
   display: flex;
   align-items: center;
@@ -597,6 +696,15 @@ body {
     font-size: 1.75rem;
   }
 
+  .auth-layout__body {
+    padding: 16px 16px 24px;
+  }
+
+  .center-panel,
+  .auth-panel {
+    padding: 24px 20px;
+  }
+
   .user-chip span {
     display: none;
   }
@@ -608,5 +716,16 @@ body {
   .btn {
     padding: 8px 10px;
     font-size: 0.8rem;
+  }
+}
+
+@media (max-height: 820px) {
+  .app-header h1 {
+    font-size: 1.85rem;
+  }
+
+  .center-panel,
+  .auth-panel {
+    padding: 22px 24px;
   }
 }
