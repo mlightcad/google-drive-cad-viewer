@@ -446,6 +446,34 @@
           <span></span>
         </button>
         <ul class="nav__links" data-nav-links>
+          <li class="nav__dropdown" data-dropdown>
+            <button type="button" class="nav__drop-btn" aria-expanded="false" aria-haspopup="true" data-drop-toggle>
+              <span>Products</span>
+              <span class="nav__chev" aria-hidden="true"></span>
+            </button>
+            <ul class="nav__menu" data-drop-menu>
+              <li>
+                <a href="https://mlightcad.com/#product">cad-viewer</a>
+              </li>
+              <li>
+                <a href="https://mlightcad.com/dwg-parser.html">DWG Parser</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav__dropdown" data-dropdown>
+            <button type="button" class="nav__drop-btn" aria-expanded="false" aria-haspopup="true" data-drop-toggle>
+              <span>Integration</span>
+              <span class="nav__chev" aria-hidden="true"></span>
+            </button>
+            <ul class="nav__menu" data-drop-menu>
+              <li>
+                <a href="https://mlightcad.com/iframe-plugin.html">iframe Plugin</a>
+              </li>
+              <li>
+                <a href="./">Google Drive Integration</a>
+              </li>
+            </ul>
+          </li>
           <li>
             <a href="./">App</a>
           </li>
@@ -578,13 +606,34 @@
         if (!nav) return
         const toggle = nav.querySelector('[data-nav-toggle]')
         const links = nav.querySelector('[data-nav-links]')
+        const dropdowns = nav.querySelectorAll('[data-dropdown]')
+        const closeDropdowns = () => {
+          dropdowns.forEach((dd) => {
+            dd.classList.remove('is-open')
+            dd.querySelector('[data-drop-toggle]')?.setAttribute('aria-expanded', 'false')
+          })
+        }
         const closeMobile = () => {
           links?.classList.remove('is-open')
           toggle?.setAttribute('aria-expanded', 'false')
+          closeDropdowns()
         }
+        dropdowns.forEach((dd) => {
+          const btn = dd.querySelector('[data-drop-toggle]')
+          if (!btn) return
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation()
+            const open = !dd.classList.contains('is-open')
+            closeDropdowns()
+            dd.classList.toggle('is-open', open)
+            btn.setAttribute('aria-expanded', String(open))
+          })
+        })
+        document.addEventListener('click', closeDropdowns)
         toggle?.addEventListener('click', () => {
           const open = links?.classList.toggle('is-open') ?? false
           toggle.setAttribute('aria-expanded', String(open))
+          if (!open) closeDropdowns()
         })
         links?.querySelectorAll('a').forEach((a) => {
           a.addEventListener('click', closeMobile)
