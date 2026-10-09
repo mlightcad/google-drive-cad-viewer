@@ -121,7 +121,8 @@ Local embed testing: set `VITE_MLIGHTCAD_EMBED_URL` to your local embed page (fo
 - Credentials live in environment variables
 - Only per-file Drive access (`drive.file`) is requested
 - Drawing bytes are downloaded in-page and sent to the embed iframe via `postMessage`; they are not stored by this app
-- In-app Privacy links (auth page, nav, workspace toolbar) open `privacy.html`
+- In-app Privacy links (auth page, workspace toolbar) open `privacy.html`
+- Header and footer are loaded from the marketing site (`https://mlightcad.com/site-chrome.js`), not copied in this repo. For a local chrome, run the mlightcad.com homepage on another port and set `VITE_SITE_CHROME_ORIGIN`.
 
 ### Publishing / OAuth verification (mlightcad.com)
 

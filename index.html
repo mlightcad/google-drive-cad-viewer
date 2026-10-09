@@ -19,67 +19,7 @@
     <div id="app">
       <!-- Sign-in / boot (centered) -->
       <main id="auth-layout" class="auth-layout" hidden>
-        <header class="nav">
-          <div class="nav__inner">
-            <a class="nav__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
-            <button class="nav__toggle" type="button" aria-label="Menu" aria-expanded="false" data-nav-toggle>
-              <span></span>
-            </button>
-            <ul class="nav__links" data-nav-links>
-              <li class="nav__dropdown" data-dropdown>
-                <button type="button" class="nav__drop-btn" aria-expanded="false" aria-haspopup="true" data-drop-toggle>
-                  <span>Products</span>
-                  <span class="nav__chev" aria-hidden="true"></span>
-                </button>
-                <ul class="nav__menu" data-drop-menu>
-                  <li>
-                    <a href="https://mlightcad.com/#product">cad-viewer</a>
-                  </li>
-                  <li>
-                    <a href="https://mlightcad.com/dwg-parser.html">DWG Parser</a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav__dropdown" data-dropdown>
-                <button type="button" class="nav__drop-btn" aria-expanded="false" aria-haspopup="true" data-drop-toggle>
-                  <span>Integration</span>
-                  <span class="nav__chev" aria-hidden="true"></span>
-                </button>
-                <ul class="nav__menu" data-drop-menu>
-                  <li>
-                    <a href="https://mlightcad.com/iframe-plugin.html">iframe Plugin</a>
-                  </li>
-                  <li>
-                    <a href="./">Google Drive Integration</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a href="./privacy.html" target="_blank" rel="noopener">Privacy</a>
-              </li>
-              <li>
-                <a href="https://cad-viewer.readthedocs.io/en/latest/" target="_blank" rel="noopener">Docs</a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/mlightcad/google-drive-cad-viewer"
-                  target="_blank"
-                  rel="noopener"
-                  >GitHub</a
-                >
-              </li>
-            </ul>
-            <div class="nav__actions">
-              <a
-                class="btn btn--primary btn--nav"
-                href="https://mlightcad.github.io/cad-viewer/"
-                target="_blank"
-                rel="noopener"
-                >Live Demo</a
-              >
-            </div>
-          </div>
-        </header>
+        <div data-site-nav></div>
 
         <div class="auth-layout__body">
           <header class="app-header">
@@ -129,17 +69,7 @@
           </section>
         </div>
 
-        <footer class="footer">
-          <div class="shell footer__inner">
-            <a class="footer__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
-            <p class="footer__tagline">Open-source CAD infrastructure for the web.</p>
-            <p class="footer__links">
-              <a href="./privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
-              <a href="https://mlightcad.com/" target="_blank" rel="noopener">mlightcad.com</a>
-            </p>
-            <p class="footer__copy">© 2026 MLightCAD</p>
-          </div>
-        </footer>
+        <div data-site-footer></div>
       </main>
 
       <!-- Authenticated: toolbar + fullscreen viewer -->
