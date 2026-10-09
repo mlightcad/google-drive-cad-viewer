@@ -8,6 +8,7 @@ interface ImportMetaEnv {
   readonly VITE_GOOGLE_API_KEY: string
   readonly VITE_GOOGLE_APP_ID: string
   readonly VITE_MLIGHTCAD_EMBED_URL?: string
+  readonly VITE_SITE_CHROME_ORIGIN?: string
 }
 
 interface ImportMeta {

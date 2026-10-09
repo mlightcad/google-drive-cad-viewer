@@ -7,7 +7,7 @@ import {
   isConfigured,
   isPickerConfigured
 } from './googleDrive'
-import { initSiteNav } from './siteNav'
+import { loadSiteChrome } from './siteChrome'
 
 type FileLoadState = 'idle' | 'loading' | 'ready' | 'error'
 
@@ -270,7 +270,7 @@ window.addEventListener('message', (event) => {
 })
 
 async function boot(): Promise<void> {
-  initSiteNav()
+  await loadSiteChrome()
   show(authLayout, true)
   show(bootPanel, true)
   show(authPanel, false)

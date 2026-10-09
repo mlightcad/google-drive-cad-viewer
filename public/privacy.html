@@ -58,232 +58,17 @@
         line-height: 1.6;
       }
 
-      .shell {
-        width: min(100% - 2.5rem, var(--max));
-        margin-inline: auto;
-      }
-
-      .nav {
-        position: sticky;
-        top: 0;
-        z-index: 20;
+      [data-site-nav] {
+        display: block;
         flex-shrink: 0;
-        height: var(--nav-h);
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid var(--line);
-        background: rgba(11, 15, 20, 0.72);
-        backdrop-filter: blur(12px);
-        transition:
-          border-color 0.35s var(--ease),
-          background 0.35s var(--ease),
-          box-shadow 0.35s var(--ease);
+        min-height: var(--nav-h);
       }
 
-      .nav.is-scrolled {
-        border-bottom-color: rgba(61, 220, 255, 0.22);
-        background: rgba(11, 15, 20, 0.88);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-      }
-
-      .nav__inner {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: var(--space-3);
-        width: min(100% - 2.5rem, var(--max));
-        margin-inline: auto;
-      }
-
-      .nav__brand {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: 1.15rem;
-        letter-spacing: -0.02em;
-        text-decoration: none;
-        color: var(--paper);
-      }
-
-      .nav__brand span {
-        color: var(--cyan);
-      }
-
-      .nav__links {
-        display: flex;
-        align-items: center;
-        gap: var(--space-4);
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .nav__links a,
-      .nav__drop-btn {
-        text-decoration: none;
-        color: var(--steel);
-        font-size: 0.95rem;
-      }
-
-      .nav__links a:hover,
-      .nav__drop-btn:hover {
-        color: var(--paper);
-      }
-
-      .nav__dropdown {
-        position: relative;
-      }
-
-      .nav__drop-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        padding: 0;
-        background: none;
-        border: 0;
-        cursor: pointer;
-        font: inherit;
-      }
-
-      .nav__chev {
-        width: 0.4rem;
-        height: 0.4rem;
-        border-right: 1px solid currentColor;
-        border-bottom: 1px solid currentColor;
-        transform: rotate(45deg) translateY(-2px);
-        opacity: 0.7;
-      }
-
-      .nav__menu {
-        display: none;
-        position: absolute;
-        top: calc(100% + 0.65rem);
-        left: 0;
-        min-width: 11rem;
-        margin: 0;
-        padding: 0.4rem 0;
-        list-style: none;
-        background: rgba(18, 24, 33, 0.96);
-        border: 1px solid var(--line);
-        z-index: 30;
-      }
-
-      .nav__dropdown.is-open .nav__menu {
+      [data-site-footer] {
         display: block;
-      }
-
-      .nav__menu a {
-        display: block;
-        padding: 0.55rem 0.9rem;
-        white-space: nowrap;
-      }
-
-      .nav__menu a:hover {
-        background: var(--cyan-dim);
-        color: var(--cyan);
-      }
-
-      .nav__actions {
-        display: flex;
-        align-items: center;
-        gap: var(--space-3);
-      }
-
-      .nav__toggle {
-        display: none;
-        width: 2.5rem;
-        height: 2.5rem;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--line);
-        border-radius: 2px;
-        background: transparent;
-        cursor: pointer;
-      }
-
-      .nav__toggle span {
-        display: block;
-        width: 1.1rem;
-        height: 1px;
-        background: var(--paper);
-        box-shadow: 0 -5px 0 var(--paper), 0 5px 0 var(--paper);
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-      }
-
-      .btn--primary {
-        background: var(--amber);
-        color: var(--amber-ink);
-        border-radius: 2px;
-        font-family: var(--font-display);
-        font-weight: 600;
-      }
-
-      .btn--primary:hover {
-        background: #f0b45e;
-        color: var(--amber-ink);
-      }
-
-      .btn--nav {
-        padding: 0.45rem 0.85rem;
-        font-size: 0.85rem;
-      }
-
-      @media (max-width: 800px) {
-        .nav__links {
-          display: none;
-        }
-
-        .nav__toggle {
-          display: inline-flex;
-          margin-left: auto;
-        }
-
-        .nav__actions {
-          margin-left: 0.5rem;
-        }
-
-        .nav__links.is-open {
-          display: flex;
-          position: absolute;
-          top: var(--nav-h);
-          left: 0;
-          right: 0;
-          flex-direction: column;
-          align-items: stretch;
-          gap: 0;
-          padding: var(--space-3) 1.25rem;
-          background: rgba(11, 15, 20, 0.96);
-          border-bottom: 1px solid var(--line);
-          z-index: 25;
-        }
-
-        .nav__links.is-open > li > a,
-        .nav__links.is-open .nav__drop-btn {
-          width: 100%;
-          justify-content: space-between;
-          padding: 0.75rem 0;
-          border-bottom: 1px solid var(--line);
-        }
-
-        .nav__menu {
-          position: static;
-          border: 0;
-          background: transparent;
-          padding: 0 0 0.5rem 0.75rem;
-        }
-
-        .nav__menu a {
-          padding: 0.55rem 0;
-          border-bottom: 1px solid var(--line);
-        }
+        flex-shrink: 0;
+        width: 100%;
+        margin-top: auto;
       }
 
       .page-body {
@@ -348,24 +133,6 @@
         color: inherit;
       }
 
-      .nav__links a,
-      .nav__drop-btn {
-        color: var(--steel);
-      }
-
-      .nav__links a:hover,
-      .nav__drop-btn:hover {
-        color: var(--paper);
-      }
-
-      .nav__brand {
-        color: var(--paper);
-      }
-
-      .btn--primary {
-        color: var(--amber-ink);
-      }
-
       ul {
         padding-left: 1.25rem;
       }
@@ -376,130 +143,10 @@
         color: var(--cyan);
         word-break: break-all;
       }
-
-      .footer {
-        flex-shrink: 0;
-        width: 100%;
-        padding: var(--space-6) 0 var(--space-5);
-        border-top: 1px solid var(--line);
-        color: var(--steel);
-        font-size: 0.95rem;
-      }
-
-      .footer__inner {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-3);
-      }
-
-      .footer__brand {
-        font-family: var(--font-display);
-        font-weight: 700;
-        font-size: 1.15rem;
-        letter-spacing: -0.03em;
-        color: var(--paper);
-        text-decoration: none;
-      }
-
-      .footer__brand span {
-        color: var(--cyan);
-      }
-
-      .footer__tagline {
-        margin: 0;
-        font-family: var(--font-display);
-        font-size: 1.2rem;
-        color: var(--paper);
-        letter-spacing: -0.02em;
-      }
-
-      .footer__links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem 1.25rem;
-        margin: 0;
-        font-size: 0.85rem;
-      }
-
-      .footer__links a {
-        color: var(--steel);
-        text-decoration: none;
-      }
-
-      .footer__links a:hover {
-        color: var(--cyan);
-      }
-
-      .footer__copy {
-        margin: 0;
-        font-family: var(--font-mono);
-        font-size: 0.8rem;
-      }
     </style>
   </head>
   <body>
-    <header class="nav">
-      <div class="nav__inner">
-        <a class="nav__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
-        <button class="nav__toggle" type="button" aria-label="Menu" aria-expanded="false" data-nav-toggle>
-          <span></span>
-        </button>
-        <ul class="nav__links" data-nav-links>
-          <li class="nav__dropdown" data-dropdown>
-            <button type="button" class="nav__drop-btn" aria-expanded="false" aria-haspopup="true" data-drop-toggle>
-              <span>Products</span>
-              <span class="nav__chev" aria-hidden="true"></span>
-            </button>
-            <ul class="nav__menu" data-drop-menu>
-              <li>
-                <a href="https://mlightcad.com/#product">cad-viewer</a>
-              </li>
-              <li>
-                <a href="https://mlightcad.com/dwg-parser.html">DWG Parser</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav__dropdown" data-dropdown>
-            <button type="button" class="nav__drop-btn" aria-expanded="false" aria-haspopup="true" data-drop-toggle>
-              <span>Integration</span>
-              <span class="nav__chev" aria-hidden="true"></span>
-            </button>
-            <ul class="nav__menu" data-drop-menu>
-              <li>
-                <a href="https://mlightcad.com/iframe-plugin.html">iframe Plugin</a>
-              </li>
-              <li>
-                <a href="./">Google Drive Integration</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="./">App</a>
-          </li>
-          <li>
-            <a href="https://cad-viewer.readthedocs.io/en/latest/" target="_blank" rel="noopener">Docs</a>
-          </li>
-          <li>
-            <a
-              href="https://github.com/mlightcad/google-drive-cad-viewer"
-              target="_blank"
-              rel="noopener"
-              >GitHub</a
-            >
-          </li>
-        </ul>
-        <div class="nav__actions">
-          <a
-            class="btn btn--primary btn--nav"
-            href="https://mlightcad.github.io/cad-viewer/"
-            target="_blank"
-            rel="noopener"
-            >Live Demo</a
-          >
-        </div>
-      </div>
-    </header>
+    <div data-site-nav></div>
 
     <div class="page-body">
       <a class="back-link" href="./">← Back to Google Drive CAD Viewer</a>
@@ -588,60 +235,14 @@
       </p>
     </div>
 
-    <footer class="footer">
-      <div class="shell footer__inner">
-        <a class="footer__brand" href="https://mlightcad.com/">MLight<span>CAD</span></a>
-        <p class="footer__tagline">Open-source CAD infrastructure for the web.</p>
-        <p class="footer__links">
-          <a href="./">Google Drive CAD Viewer</a>
-          <a href="https://mlightcad.com/">mlightcad.com</a>
-        </p>
-        <p class="footer__copy">© 2026 MLightCAD</p>
-      </div>
-    </footer>
+    <div data-site-footer></div>
 
-    <script>
-      ;(() => {
-        const nav = document.querySelector('.nav')
-        if (!nav) return
-        const toggle = nav.querySelector('[data-nav-toggle]')
-        const links = nav.querySelector('[data-nav-links]')
-        const dropdowns = nav.querySelectorAll('[data-dropdown]')
-        const closeDropdowns = () => {
-          dropdowns.forEach((dd) => {
-            dd.classList.remove('is-open')
-            dd.querySelector('[data-drop-toggle]')?.setAttribute('aria-expanded', 'false')
-          })
-        }
-        const closeMobile = () => {
-          links?.classList.remove('is-open')
-          toggle?.setAttribute('aria-expanded', 'false')
-          closeDropdowns()
-        }
-        dropdowns.forEach((dd) => {
-          const btn = dd.querySelector('[data-drop-toggle]')
-          if (!btn) return
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation()
-            const open = !dd.classList.contains('is-open')
-            closeDropdowns()
-            dd.classList.toggle('is-open', open)
-            btn.setAttribute('aria-expanded', String(open))
-          })
-        })
-        document.addEventListener('click', closeDropdowns)
-        toggle?.addEventListener('click', () => {
-          const open = links?.classList.toggle('is-open') ?? false
-          toggle.setAttribute('aria-expanded', String(open))
-          if (!open) closeDropdowns()
-        })
-        links?.querySelectorAll('a').forEach((a) => {
-          a.addEventListener('click', closeMobile)
-        })
-        const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 8)
-        window.addEventListener('scroll', onScroll, { passive: true })
-        onScroll()
-      })()
+    <script type="module">
+      try {
+        await import('https://mlightcad.com/site-chrome.js')
+      } catch (error) {
+        console.warn('Failed to load MLightCAD site chrome:', error)
+      }
     </script>
   </body>
 </html>
